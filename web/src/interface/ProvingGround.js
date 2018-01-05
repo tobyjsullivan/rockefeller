@@ -5,7 +5,9 @@ import SidebarButton from './menu/SidebarButton';
 import SearchBar from './search/SearchBar';
 import Header from './Header';
 import PersonCard from './people/PersonCard';
-import AddDetailButton from './people/AddDetailButton'
+import PersonNotFoundCard from './people/PersonNotFoundCard';
+import AddDetailButton from './people/AddDetailButton';
+import PeopleIndex from './people/PeopleIndex';
 
 const RenderBox = styled.div`
   margin: 0;
@@ -21,7 +23,9 @@ export default () => (
       <li><Link to="/proving/SearchBar">SearchBar</Link></li>
       <li><Link to="/proving/Header">Header</Link></li>
       <li><Link to="/proving/PersonCard">PersonCard</Link></li>
+      <li><Link to="/proving/PersonNotFoundCard">PersonNotFoundCard</Link></li>
       <li><Link to="/proving/AddDetailButton">AddDetailButton</Link></li>
+      <li><Link to="/proving/PeopleIndex">PeopleIndex</Link></li>
       <li><Link to="/proving">Clear</Link></li>
     </ul>
     <Route path="/proving/:id" render={() => (
@@ -56,8 +60,18 @@ export default () => (
             onClickAddConversation={() => alert('Add Convo clicked!')}
             onClickAddNote={() => alert('Add Note clicked!')} />
         )} />
+        <Route path="/proving/PersonNotFoundCard" render={() => (
+          <PersonNotFoundCard />
+        )} />
         <Route path="/proving/AddDetailButton" render={() => (
           <AddDetailButton onClick={() => alert('Add clicked!')} />
+        )} />
+        <Route path="/proving/PeopleIndex" render={() => (
+          <PeopleIndex people={[
+            {personId: 'janetj', name: 'Janet Jackson'},
+            {personId: 'michaelj', name: 'Michael Jackson'},
+            {personId: 'tobys', name: 'Toby Sullivan'},
+          ]} />
         )} />
       </RenderBox>
     )}>

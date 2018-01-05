@@ -1,12 +1,33 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import PersonCard from './PersonCard';
+import PersonNotFoundCard from './PersonNotFoundCard';
+import { findPersonById } from '../../reducer';
+
+const mapStateToProps = (state) => ({
+  findPersonById: (personId) => findPersonById(state, personId)
+});
 
 class PersonCardContainer extends Component {
+  static propTypes = {
+    personId: PropTypes.string.isRequired,
+    findPersonById: PropTypes.func.isRequired
+  }
+
   render() {
+    const {personId, findPersonById} = this.props;
+
+    const person = findPersonById(personId);
+
+    if(!person) {
+      return (<PersonNotFoundCard />);
+    }
+
     return (
-      <PersonCard 
-        fullName="Janet Jackson"
+      <PersonCard
+        fullName={person.name}
         facts={['Spouce: Bruce Springsteen', 'Stage Manager at NBC Studios']}
         conversations={[
           {
@@ -26,4 +47,4 @@ class PersonCardContainer extends Component {
   }
 }
 
-export default PersonCardContainer;
+export default connect(mapStateToProps)(PersonCardContainer);

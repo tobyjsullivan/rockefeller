@@ -6,9 +6,13 @@ import PersonCardContainer from '../people/PersonCardContainer';
 
 const AppWindow = styled.div``;
 
-export default () => (
-  <AppWindow>
-    <Header />
-    <PersonCardContainer />
-  </AppWindow>
-);
+export default ({match}) => {
+  const {params: {personId}} = match;
+
+  return (
+    <AppWindow>
+      <Header />
+      <PersonCardContainer personId={personId} />
+    </AppWindow>
+  );
+};

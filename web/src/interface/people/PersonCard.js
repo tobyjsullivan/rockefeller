@@ -3,10 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import AddDetailButton from './AddDetailButton';
+import Card from '../Card';
 
-const Card = styled.div`
-  padding: 6px;
-`;
 const Name = styled.h1``;
 const Title = styled.h2``;
 const FactSummary = styled.section``;
