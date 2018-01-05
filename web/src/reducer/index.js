@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 
-import people, * as fromPeople from './people';
+import entities, * as fromEntities from './entities';
 
 export default combineReducers({
-  people
+  entities
 });
 
-export const getAllPeopleIds = state => fromPeople.getAllPeopleIds(state.people);
-export const findPersonById = (state, personId) => fromPeople.findPersonById(state.people, personId);
+export const getAllPeopleIds = (state) => fromEntities.getAllPeopleIds(state.entities);
+export const findPersonById = (state, personId) => fromEntities.findPersonById(state.entities, personId);
