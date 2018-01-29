@@ -8,15 +8,23 @@ import './index.css';
 import App from './interface/App';
 import registerServiceWorker from './registerServiceWorker';
 import appReducer from './reducer';
+import {loadState, saveState} from './localStorage';
 
-const store = createStore(appReducer);
+const persistedState = loadState();
+const store = createStore(appReducer, persistedState);
+
+store.subscribe(() => {
+  saveState({
+    auth: store.getState().auth
+  })
+});
 
 ReactDOM.render(
   <Provider store={store}>
     <Router>
       <App />
     </Router>
-  </Provider>, 
+  </Provider>,
   document.getElementById('root')
 );
 registerServiceWorker();
