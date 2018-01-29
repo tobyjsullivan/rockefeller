@@ -2,10 +2,12 @@ import { combineReducers } from 'redux';
 
 import entities, * as fromEntities from './entities';
 import auth, * as fromAuth from './auth';
+import saveFile, * as fromSaveFile from './save-file';
 
 export default combineReducers({
   entities,
-  auth
+  auth,
+  saveFile
 });
 
 // Entities Accessors
@@ -14,3 +16,7 @@ export const findPersonById = (state, personId) => fromEntities.findPersonById(s
 
 // Auth Accessors
 export const getPasswordHash = state => fromAuth.getPasswordHash(state.auth);
+
+// Save File Accessors
+export const isSaveFileLoadingStarted = state => fromSaveFile.isSaveFileLoadingStarted(state.saveFile);
+export const isSaveFileLoadingFinished = state => fromSaveFile.isSaveFileLoadingFinished(state.saveFile);
