@@ -45,10 +45,7 @@ store.subscribe(() => {
         resp.data.people.forEach(person => {
           store.dispatch({
             type: 'ENTITY_STORE_PERSON',
-            payload: {
-              id: person.id,
-              name: person.name
-            }
+            payload: person
           })
         });
       })

@@ -28,7 +28,7 @@ class PersonCardContainer extends Component {
     return (
       <PersonCard
         fullName={person.name}
-        facts={['Spouce: Bruce Springsteen', 'Stage Manager at NBC Studios']}
+        facts={person.facts.toArray()}
         conversations={[
           {
             date: '2017-12-30',
@@ -39,7 +39,7 @@ class PersonCardContainer extends Component {
             summary: 'Said she had never tried pickles.'
           }
         ]}
-        notes={['Doesn\'t like pickles']}
+        notes={person.notes.toArray()}
         onClickAddFact={() => alert('Add Fact clicked!')}
         onClickAddConversation={() => alert('Add Convo clicked!')}
         onClickAddNote={() => alert('Add Note clicked!')} />
