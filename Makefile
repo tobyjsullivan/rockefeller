@@ -8,3 +8,7 @@ staging/init:
 
 staging/deploy:
 	cd infra/staging && terraform apply
+
+staging/destroy:
+	cd infra/staging && terraform destroy
+
