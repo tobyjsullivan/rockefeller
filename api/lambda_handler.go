@@ -1,17 +1,14 @@
 package main
 
 import (
-	"fmt"
-	"github.com/aws/aws-lambda-go/lambda"
 	"encoding/json"
-	"log"
-	"github.com/graphql-go/graphql"
-	"net/http"
 	"errors"
-)
+	"fmt"
+	"log"
+	"net/http"
 
-var (
-	schema graphql.Schema
+	"./graph"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 type ApiEvent struct {
@@ -68,8 +65,7 @@ func HandleLambdaEvent(event ApiEvent) (ApiResponse, error) {
 }
 
 func handleGraphQuery(query *QueryRequest) (ApiResponse, error) {
-	params := graphql.Params{Schema: schema, RequestString: query.Query}
-	r := graphql.Do(params)
+	r := graph.PerformQuery(query.Query)
 	if len(r.Errors) > 0 {
 		return generateApiResponse(http.StatusBadRequest, r)
 	}
@@ -78,21 +74,5 @@ func handleGraphQuery(query *QueryRequest) (ApiResponse, error) {
 }
 
 func main() {
-	fields := graphql.Fields{
-		"hello": &graphql.Field{
-			Type: graphql.String,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return "world", nil
-			},
-		},
-	}
-	rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: fields}
-	schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery)}
-	var err error
-	schema, err = graphql.NewSchema(schemaConfig)
-	if err != nil {
-		log.Fatalf("failed to create new schema: %v", err)
-	}
-
 	lambda.Start(HandleLambdaEvent)
 }
