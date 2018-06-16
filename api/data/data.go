@@ -42,7 +42,7 @@ func Load() (*Account, error) {
 				RelationshipCards: []*RelationshipCard{},
 			}
 
-			updateData(&acct)
+			Save(&acct)
 		} else {
 			log.Fatalf("Error fetching data file: %v", err)
 		}
@@ -56,7 +56,7 @@ func Load() (*Account, error) {
 	return &acct, nil
 }
 
-func updateData(account *Account) error {
+func Save(account *Account) error {
 	body, err := json.Marshal(&account)
 	if err != nil {
 		log.Fatalf("Error serializing new data file: %v", err)
