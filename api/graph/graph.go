@@ -1,10 +1,11 @@
 package graph
 
 import (
+	"errors"
+	"log"
+
 	"../data"
 	"github.com/graphql-go/graphql"
-	"log"
-	"errors"
 )
 
 var schema graphql.Schema
@@ -53,7 +54,7 @@ func init() {
 	}
 }
 
-func PerformQuery(query string) (*graphql.Result) {
+func PerformQuery(query string) *graphql.Result {
 	params := graphql.Params{Schema: schema, RequestString: query}
 	return graphql.Do(params)
 }

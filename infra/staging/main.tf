@@ -11,11 +11,10 @@ provider "aws" {
 }
 
 module "staging_env" {
-  source         = "../common"
-  env            = "staging"
+  source = "../common"
+  env    = "staging"
 }
 
 output "api_invoke_url" {
   value = "${module.staging_env.api_invoke_url}"
 }
-

@@ -52,6 +52,27 @@ resource "aws_iam_role_policy" "lambda_logs" {
 EOF
 }
 
+resource "aws_iam_role_policy" "data_bucket" {
+  name_prefix = "graph-api-data"
+  role        = "${aws_iam_role.lambda_role.id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "${aws_s3_bucket.data.arn}/*"
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_lambda_function" "handler" {
   filename         = "${var.lambda_package}"
   source_code_hash = "${base64sha256(file(var.lambda_package))}"
@@ -59,6 +80,13 @@ resource "aws_lambda_function" "handler" {
   handler          = "lambda_handler"
   runtime          = "go1.x"
   role             = "${aws_iam_role.lambda_role.arn}"
+
+  environment {
+    variables {
+      "DATA_BUCKET" = "${aws_s3_bucket.data.bucket}"
+      "DATA_KEY"    = "account1.data"
+    }
+  }
 }
 
 resource "aws_api_gateway_rest_api" "api" {
