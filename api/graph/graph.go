@@ -14,8 +14,12 @@ func init() {
 		Name: "RelationshipCard",
 		Fields: graphql.Fields{
 			"id": &graphql.Field{
-				Type: graphql.ID,
+				Type:    graphql.NewNonNull(graphql.ID),
 				Resolve: resolveRelationshipCardID,
+			},
+			"name": &graphql.Field{
+				Type:    graphql.NewNonNull(graphql.String),
+				Resolve: resolveRelationshipCardName,
 			},
 		},
 	})
@@ -24,7 +28,7 @@ func init() {
 		Name: "Account",
 		Fields: graphql.Fields{
 			"relationshipCards": &graphql.Field{
-				Type: graphql.NewList(relationshipCardType),
+				Type:    graphql.NewNonNull(graphql.NewList(graphql.NewNonNull(relationshipCardType))),
 				Resolve: resolveAccountRelationshipCards,
 			},
 		},
@@ -34,7 +38,7 @@ func init() {
 		Name: "RootQuery",
 		Fields: graphql.Fields{
 			"me": &graphql.Field{
-				Type: accountType,
+				Type:    accountType,
 				Resolve: resolveMe,
 			},
 		},
@@ -69,6 +73,14 @@ func resolveAccountRelationshipCards(p graphql.ResolveParams) (interface{}, erro
 func resolveRelationshipCardID(p graphql.ResolveParams) (interface{}, error) {
 	if card, ok := p.Source.(*data.RelationshipCard); ok {
 		return card.ID, nil
+	}
+
+	return nil, errors.New("not a RelationshipCard")
+}
+
+func resolveRelationshipCardName(p graphql.ResolveParams) (interface{}, error) {
+	if card, ok := p.Source.(*data.RelationshipCard); ok {
+		return card.Name, nil
 	}
 
 	return nil, errors.New("not a RelationshipCard")
