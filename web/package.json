@@ -1,25 +1,15 @@
 {
   "name": "rockefeller-web",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@fortawesome/fontawesome": "^1.1.0",
-    "@fortawesome/fontawesome-free-solid": "^5.0.2",
-    "@fortawesome/react-fontawesome": "^0.0.17",
-    "axios": "^0.17.1",
-    "immutable": "^3.8.2",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-redux": "^5.0.6",
-    "react-router-dom": "^4.2.2",
-    "react-scripts": "1.0.17",
-    "redux": "^3.7.2",
-    "styled-components": "^2.3.3"
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/react": "^16.3.18",
+    "@types/react-dom": "^16.0.6",
+    "typescript": "^2.9.2"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+  "dependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
   }
 }

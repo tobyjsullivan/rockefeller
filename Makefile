@@ -1,7 +1,13 @@
-.PHONY: api staging/init staging/deploy
+.PHONY: api serve web staging/init staging/terraform staging/destroy staging/deploy
 
 api:
 	cd api && make package
+
+web:
+	cd web && make build
+
+serve:
+	cd web && make serve
 
 staging/init:
 	cd infra/staging && terraform init
