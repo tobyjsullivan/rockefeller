@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"./delta"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -35,10 +36,11 @@ func (acct *Account) FindRelationshipCard(cardId string) *RelationshipCard {
 }
 
 type RelationshipCard struct {
-	ID        string  `json:"id"`
-	Name      string  `json:"name"`
-	Favourite bool    `json:"favourite"`
-	Memo      *string `json:"memo"`
+	ID        string         `json:"id"`
+	Name      string         `json:"name"`
+	Favourite bool           `json:"favourite"`
+	Memo      *string        `json:"memo"`
+	Notes     *delta.Document `json:"notes"`
 }
 
 func Load() (*Account, error) {
