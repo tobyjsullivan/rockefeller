@@ -19,12 +19,26 @@ var (
 )
 
 type Account struct {
-	RelationshipCards []*RelationshipCard `json:"relationshipCards"`
+	RelationshipCards       []*RelationshipCard `json:"relationshipCards"`
+	idxIdToRelationshipCard map[string]*RelationshipCard
+}
+
+func (acct *Account) buildIndex() {
+	acct.idxIdToRelationshipCard = make(map[string]*RelationshipCard)
+	for _, card := range acct.RelationshipCards {
+		acct.idxIdToRelationshipCard[card.ID] = card
+	}
+}
+
+func (acct *Account) FindRelationshipCard(cardId string) *RelationshipCard {
+	return acct.idxIdToRelationshipCard[cardId]
 }
 
 type RelationshipCard struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID        string  `json:"id"`
+	Name      string  `json:"name"`
+	Favourite bool    `json:"favourite"`
+	Memo      *string `json:"memo"`
 }
 
 func Load() (*Account, error) {
@@ -52,6 +66,7 @@ func Load() (*Account, error) {
 			log.Fatalf("Error decoding data file: %v", err)
 		}
 	}
+	acct.buildIndex()
 
 	return &acct, nil
 }
