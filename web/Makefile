@@ -9,3 +9,6 @@ build: $(SRC)
  
 serve: $(SRC)
 	parcel serve index.html
+
+storybook:
+	npm run storybook
