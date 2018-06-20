@@ -1,14 +1,15 @@
 .PHONY: build serve
 
-JS=$(*.js **/*.js)
-TS=$(*.ts **/*.ts)
-SRC=index.html $(JS) $(TS)
+IDX=src/index.html
+JS=$(src/**/*.js)
+TS=$(src/**/*.ts)
+SRC=$(IDX) $(JS) $(TS)
 
 build: $(SRC)
-	parcel build index.html
+	parcel build $(IDX)
  
 serve: $(SRC)
-	parcel serve index.html
+	parcel serve $(IDX)
 
 storybook:
 	npm run storybook
