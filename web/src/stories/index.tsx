@@ -8,9 +8,14 @@ storiesOf('Home Screen', module)
   .add('default', () => (<HomeScreen />));
 
 storiesOf('Search Bar', module)
-  .add('default', () => (<SearchBar onQueryChanged={() => {}} />))
+  .add('default', () => (
+    <SearchBar
+      onQueryChanged={action('query-changed')}
+      onSearchClicked={action('search-clicked')} />
+  ))
   .add('with text', () => (
     <SearchBar
-      onQueryChanged={() => {}}
-      query="Marty McFly" />
+      query="Marty McFly"
+      onQueryChanged={action('query-changed')}
+      onSearchClicked={action('search-clicked')} />
   ));

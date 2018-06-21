@@ -2,7 +2,7 @@ import * as React from 'react';
 import SearchBar from './SearchBar';
 
 interface Props {
-  onQueryChanged?: (query: string) => void;
+  onSearchExecuted?: (query: string) => void;
 }
 
 interface State {
@@ -15,17 +15,27 @@ class SearchBarContainer extends React.Component<Props, State> {
   };
 
   handleQueryChanged = (query: string) => {
-    this.setState((state) => ({...state, query}), () => {
-      if (this.props.onQueryChanged) {
-        this.props.onQueryChanged(this.state.query);
-      }
-    });
+    this.setState((state) => ({...state, query}));
   };
+
+  handleSearchClicked = () => {
+    const {onSearchExecuted} = this.props;
+    const {query} = this.state;
+
+    if (onSearchExecuted) {
+      onSearchExecuted(query);
+    }
+  }
 
   render() {
     const {query} = this.state;
 
-    return (<SearchBar onQueryChanged={this.handleQueryChanged} query={query} />);
+    return (
+      <SearchBar
+        query={query}
+        onQueryChanged={this.handleQueryChanged}
+        onSearchClicked={this.handleSearchClicked} />
+    );
   }
 }
 
