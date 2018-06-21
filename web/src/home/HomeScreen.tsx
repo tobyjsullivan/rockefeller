@@ -1,5 +1,6 @@
 import * as React from 'react';
+import SearchBarContainer from '../search/SearchBarContainer';
 
 export default () => (
-  <h1>Welcome Home</h1>
+  <SearchBarContainer onSearchExecuted={(query) => {alert('Searched: '+query)}} />
 );
