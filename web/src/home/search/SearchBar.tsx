@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import {Group} from '../../ui/Elements';
 
 const TextBox = styled.input`
   width: calc(100% - (55px + (4 * 2px)));
@@ -27,10 +28,10 @@ interface Props {
 }
 
 const SearchBar: React.StatelessComponent<Props> = ({query, onQueryChanged, onSearchClicked}) => (
-  <div>
+  <Group>
     <TextBox type="text" value={query} onChange={(e) => onQueryChanged(e.target.value)} />
     <Button onClick={() => onSearchClicked()}>Search</Button>
-  </div>
+  </Group>
 );
 
 export default SearchBar;
