@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import {Group} from '../../ui/Elements';
+import {Group} from '../../ui/Els';
 
 const TextBox = styled.input`
   width: calc(100% - (55px + (4 * 2px)));

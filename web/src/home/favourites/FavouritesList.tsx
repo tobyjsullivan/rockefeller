@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import {Group, Text} from '../../ui/Elements';
+import {Group, Text} from '../../ui/Els';
 import FavouritesListEntry from './FavouritesListEntry';
 
 interface RelationshipLink {

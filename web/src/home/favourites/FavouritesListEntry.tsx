@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Text, Link} from '../../ui/Elements';
+import {Text, Link} from '../../ui/Els';
 
 interface Props {
   name: string;

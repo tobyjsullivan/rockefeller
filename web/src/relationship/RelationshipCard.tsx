@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import {Group, Heading, Text} from '../ui/Elements';
+import {Group, Heading, Text} from '../ui/Els';
 
 interface Props {
   name: string;
