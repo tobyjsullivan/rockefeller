@@ -1,15 +1,15 @@
-.PHONY: build serve
+.PHONY: build serve storybook test
 
 IDX=src/index.html
-JS=$(src/**/*.js)
-TS=$(src/**/*.ts)
-SRC=$(IDX) $(JS) $(TS)
 
-build: $(SRC)
+build:
 	parcel build $(IDX)
- 
-serve: $(SRC)
+
+serve:
 	parcel serve $(IDX)
+
+test:
+	yarn run test
 
 storybook:
 	npm run storybook
