@@ -3,32 +3,33 @@ import styled from 'styled-components';
 import {Group, Text} from '../ui/Els';
 import {Document} from './Document';
 import DocumentEditor from './DocumentEditor';
+import Theme from '../ui/Theme';
 
 interface Props {
   document: Document;
   editing?: boolean;
 }
 
-const Paragraph = styled(Text)`
-  margin-bottom: 0.7em;
+const Border = styled(Group)`
+  border: 1px solid ${Theme.fgColor};
+  padding: 7px;
+  font-family: ${Theme.fontFamily};
+  color: ${Theme.fgColor};
+  font-size: ${Theme.fontSize};
 `;
 
 const DocumentField: React.StatelessComponent<Props> = ({document, editing = false}) => {
+  let field = (<Text>Hello, world!</Text>)
+
   if (editing) {
-    return (<DocumentEditor document={document} />);
+    field = (<DocumentEditor document={document} />);
   }
 
-  // const paragraphs = [];
-  // // for (let block of document) {
-  // //   paragraphs.push((<Paragraph key={block.content}>{block.content}</Paragraph>));
-  // // }
-
-  // return (
-  //   <Group>
-  //     {paragraphs}
-  //   </Group>
-  // );
-  return (<Group />)
+  return (
+    <Border>
+      {field}
+    </Border>
+  );
 };
 
 export default DocumentField;

@@ -1,24 +1,21 @@
 import * as React from 'react';
 import styled from 'styled-components';
-
-const fontFamily = "'Arial'";
-const fgColor = "#000";
-const bgColor = "#fff";
+import Theme from './Theme';
 
 export const Text = styled.p`
-  font-family: ${fontFamily};
-  color: ${fgColor};
-  font-size: 11pt;
+  font-family: ${Theme.fontFamily};
+  color: ${Theme.fgColor};
+  font-size: ${Theme.fontSize};
   margin 0;
 `;
 
 export const Link = styled.a`
   text-decoration: underline;
-  color: ${fgColor};
+  color: ${Theme.fgColor};
 `;
 
 export const Heading = styled.h1`
-  font-family: ${fontFamily};
+  font-family: ${Theme.fontFamily};
   margin 0;
 `;
 
@@ -28,7 +25,8 @@ export const Input = styled.input`
   height: 22px;
   margin: 0;
   padding: 2px 7px;
-  border 1px solid ${fgColor};
+  border 1px solid ${Theme.fgColor};
+  font-family: ${Theme.fontFamily};
   box-sizing: border-box;
 `;
 
@@ -36,7 +34,8 @@ export const Button = styled.button`
   height: 22px;
   margin: 0;
   padding: 2px 7px;
-  border: 1px solid ${fgColor};
-  background-color: ${bgColor};
+  border: 1px solid ${Theme.fgColor};
+  background-color: ${Theme.bgColor};
+  font-family: ${Theme.fontFamily};
   box-sizing: border-box;
 `;
