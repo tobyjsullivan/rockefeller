@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import {Group, Text} from '../../ui/Els';
-import FavouritesListEntry from './FavouritesListEntry';
+import {Group, Text, Link} from './Els';
 
 interface RelationshipLink {
   name: string;
@@ -34,5 +33,13 @@ const FavouritesList: React.StatelessComponent<Props> = ({relationships}) => {
     </Group>
   );
 };
+
+interface EntryProps {
+  name: string;
+}
+
+const FavouritesListEntry: React.StatelessComponent<EntryProps> = ({name}) => (
+  <Text>★ <Link href="#">{name}</Link></Text>
+);
 
 export default FavouritesList;

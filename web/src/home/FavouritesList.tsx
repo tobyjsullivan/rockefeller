@@ -1,5 +1,5 @@
 import * as React from 'react';
-import FavouritesList from './FavouritesList';
+import FavouritesList from '../ui/FavouritesList';
 
 interface State {
   relationships: ReadonlyArray<RelationshipLink>;

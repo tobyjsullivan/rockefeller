@@ -1,11 +1,11 @@
 import * as React from 'react';
-import SearchBarContainer from './search/SearchBarContainer';
-import FavouritesListContainer from './favourites/FavouritesListContainer';
+import SearchBar from './SearchBar';
+import FavouritesList from './FavouritesList';
 import {Group} from '../ui/Els';
 
 export default () => (
   <Group>
-    <SearchBarContainer />
-    <FavouritesListContainer />
+    <SearchBar />
+    <FavouritesList />
   </Group>
 );

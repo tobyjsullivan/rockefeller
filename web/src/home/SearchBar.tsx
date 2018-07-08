@@ -1,5 +1,5 @@
 import * as React from 'react';
-import SearchBar from '../../ui/SearchBar';
+import SearchBar from '../ui/SearchBar';
 
 interface State {
   query: string;

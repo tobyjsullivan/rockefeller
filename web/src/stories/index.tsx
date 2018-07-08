@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import FavouritesList from '../home/favourites/FavouritesList';
+import FavouritesList from '../ui/FavouritesList';
 import RelationshipCard from '../relationship/RelationshipCard';
 import SearchBar from '../ui/SearchBar';
 import NoteField from '../ui/NoteField';
