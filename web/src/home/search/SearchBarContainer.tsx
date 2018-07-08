@@ -1,5 +1,5 @@
 import * as React from 'react';
-import SearchBar from './SearchBar';
+import SearchBar from '../../ui/SearchBar';
 
 interface State {
   query: string;
@@ -27,8 +27,8 @@ class SearchBarContainer extends React.Component<{}, State> {
     return (
       <SearchBar
         query={query}
-        onQueryChanged={this.handleQueryChanged}
-        onSearchClicked={this.handleSearchClicked} />
+        onQueryChange={this.handleQueryChanged}
+        onSearchClick={this.handleSearchClicked} />
     );
   }
 }

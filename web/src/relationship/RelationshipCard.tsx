@@ -1,13 +1,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import {Group, Heading, Text} from '../ui/Els';
-import {Document} from '../document/Document';
-import DocumentField from '../document/DocumentField';
+import NoteField from '../ui/NoteField';
 
 interface Props {
   name: string;
   tagline: string;
-  notes: Document;
+  notes: string;
 }
 
 const Tagline = styled(Text)`
@@ -19,7 +18,7 @@ const RelationshipCard: React.StatelessComponent<Props> = ({name, tagline, notes
   <Group>
     <Heading>{name}</Heading>
     <Tagline>{tagline}</Tagline>
-    <DocumentField document={notes} />
+    <NoteField content={notes} />
   </Group>
 );
 
