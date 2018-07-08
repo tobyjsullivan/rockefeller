@@ -4,8 +4,8 @@ import { action } from '@storybook/addon-actions';
 import SearchBar from '../home/search/SearchBar';
 import FavouritesList from '../home/favourites/FavouritesList';
 import RelationshipCard from '../relationship/RelationshipCard';
-import {Document} from '../relationship/Document';
-import DocumentField from '../relationship/DocumentField';
+import {Document} from '../document/Document';
+import DocumentField from '../document/DocumentField';
 
 storiesOf('Search Bar', module)
   .add('default', () => (

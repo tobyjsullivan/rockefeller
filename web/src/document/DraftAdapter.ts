@@ -1,7 +1,7 @@
 import {Document} from './Document';
 import { ContentState, ContentBlock } from 'draft-js';
 
-export function fromDocument(doc: Document): ContentState {
+export function contentStateFromDocument(doc: Document): ContentState {
   let blocks = new Array<ContentBlock>();
   for (const op of doc.getOperations().toArray()) {
     if (op.insert) {

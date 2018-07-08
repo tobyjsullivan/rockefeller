@@ -4,6 +4,7 @@ import {Group, Text} from '../ui/Els';
 import {Document} from './Document';
 import DocumentEditor from './DocumentEditor';
 import Theme from '../ui/Theme';
+import DocumentDisplay from './DocumentDisplay';
 
 interface Props {
   document: Document;
@@ -19,7 +20,7 @@ const Border = styled(Group)`
 `;
 
 const DocumentField: React.StatelessComponent<Props> = ({document, editing = false}) => {
-  let field = (<Text>Hello, world!</Text>)
+  let field = (<DocumentDisplay document={document} />);
 
   if (editing) {
     field = (<DocumentEditor document={document} />);

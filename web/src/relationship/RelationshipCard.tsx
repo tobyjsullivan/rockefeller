@@ -1,8 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import {Group, Heading, Text} from '../ui/Els';
-import {Document} from './Document';
-import DocumentField from './DocumentField';
+import {Document} from '../document/Document';
+import DocumentField from '../document/DocumentField';
 
 interface Props {
   name: string;
