@@ -5,8 +5,20 @@ import FavouritesList from '../ui/FavouritesList';
 import RelationshipCard from '../relationship/RelationshipCard';
 import SearchBar from '../ui/SearchBar';
 import NoteField from '../ui/NoteField';
+import {Button, Text, Heading} from '../ui/Els';
 
-storiesOf('Search Bar', module)
+storiesOf('Button', module)
+  .add('default', () => (
+    <Button onClick={action('button-clicked')}>Click Me!</Button>
+  ));
+
+storiesOf('Text', module)
+  .add('default', () => (<Text>This is some simple text.</Text>));
+
+storiesOf('Heading', module)
+  .add('default', () => (<Heading>Heading</Heading>));
+
+storiesOf('SearchBar', module)
   .add('default', () => (
     <SearchBar
       onQueryChange={action('query-changed')}
@@ -19,7 +31,7 @@ storiesOf('Search Bar', module)
       onSearchClick={action('search-clicked')} />
   ));
 
-storiesOf('Favourites List', module)
+storiesOf('FavouritesList', module)
   .add('with two cards', () => (
     <FavouritesList
       relationships={[
@@ -31,7 +43,7 @@ storiesOf('Favourites List', module)
     <FavouritesList relationships={[]} />
   ));
 
-storiesOf('Relationship Card', module)
+storiesOf('RelationshipCard', module)
   .add('with simple content', () => {
     const notes = `2017-03-22 Had lunch at the farmhouse. Met her partner, Smidt Ivett.
 
