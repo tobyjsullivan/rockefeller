@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import {Link as RLink} from 'react-router-dom';
 import Theme from './Theme';
 
 export const Text = styled.p`
@@ -9,7 +10,7 @@ export const Text = styled.p`
   margin 0;
 `;
 
-export const Link = styled.a`
+export const Link = styled(RLink)`
   text-decoration: underline;
   color: ${Theme.fgColor};
 `;

@@ -39,7 +39,7 @@ interface EntryProps {
 }
 
 const FavouritesListEntry: React.StatelessComponent<EntryProps> = ({name}) => (
-  <Text>★ <Link href="#">{name}</Link></Text>
+  <Text>★ <Link to={`/relationship/${name}`}>{name}</Link></Text>
 );
 
 export default FavouritesList;

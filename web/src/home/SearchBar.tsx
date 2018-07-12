@@ -7,7 +7,7 @@ interface State {
 
 class SearchBarContainer extends React.Component<{}, State> {
   state: State = {
-    query: ""
+    query: ''
   };
 
   handleQueryChanged = (query: string) => {

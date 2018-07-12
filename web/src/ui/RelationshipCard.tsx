@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import {Group, Heading, Text} from '../ui/Els';
-import NoteField from '../ui/NoteField';
+import {Group, Heading, Text} from './Els';
+import NoteField from './NoteField';
 
 interface Props {
   name: string;
