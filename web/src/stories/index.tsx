@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import StoryRouter from 'storybook-react-router';
+import StoryRouter from './StoryRouter';
 import FavouritesList from '../ui/FavouritesList';
 import RelationshipCard from '../ui/RelationshipCard';
 import SearchBar from '../ui/SearchBar';
@@ -33,7 +33,7 @@ storiesOf('SearchBar', module)
   ));
 
 storiesOf('FavouritesList', module)
-  .addDecorator(StoryRouter())
+  .addDecorator(StoryRouter)
   .add('with two cards', () => (
     <FavouritesList
       relationships={[
