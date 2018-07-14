@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { decorate, computed } from 'mobx';
 import { observer } from 'mobx-react';
-import FavouritesList from '../ui/FavouritesList';
+import RelationshipList from '../ui/RelationshipList';
 import RelationshipDB from './RelationshipDB';
 
 interface State {
@@ -9,27 +9,26 @@ interface State {
 }
 
 interface RelationshipLink {
+  id: string;
   name: string;
 }
 
-class FavouritesListContainer extends React.Component<{}, State> {
+class Favourites extends React.Component<{}, State> {
   get favouriteLinks() {
-    return RelationshipDB.relationships;
+    return RelationshipDB.relationships.filter(r => r.favourite);
   }
 
   render() {
     const relationships = this.favouriteLinks;
 
     return (
-      <div>
-        <FavouritesList relationships={relationships} />
-      </div>
+      <RelationshipList favourites={true} showEmptyText={false} relationships={relationships} />
     );
   }
 }
 
-decorate(FavouritesListContainer, {
+decorate(Favourites, {
   favouriteLinks: computed,
 });
 
-export default observer(FavouritesListContainer);
+export default observer(Favourites);

@@ -2,11 +2,12 @@ import * as React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import StoryRouter from './StoryRouter';
-import FavouritesList from '../ui/FavouritesList';
+import RelationshipList from '../ui/RelationshipList';
 import RelationshipCard from '../ui/RelationshipCard';
 import SearchBar from '../ui/SearchBar';
 import NoteField from '../ui/NoteField';
 import {Button, Text, Heading} from '../ui/Els';
+import { List } from 'immutable';
 
 storiesOf('Button', module)
   .add('default', () => (
@@ -32,17 +33,29 @@ storiesOf('SearchBar', module)
       onSearchClick={action('search-clicked')} />
   ));
 
-storiesOf('FavouritesList', module)
+storiesOf('RelationshipList', module)
   .addDecorator(StoryRouter)
-  .add('with two cards', () => (
-    <FavouritesList
-      relationships={[
-        {name: "Fatinah Zahrah Baba"},
-        {name: "Leonardo Lima"}
-      ]} />
+  .add('Normal', () => (
+    <RelationshipList
+      favourites={false}
+      relationships={List([
+        {id: '1', name: "Fatinah Zahrah Baba"},
+        {id: '2', name: "Leonardo Lima"}
+      ])} />
   ))
-  .add('with no cards', () => (
-    <FavouritesList relationships={[]} />
+  .add('Empty normal', () => (
+    <RelationshipList favourites={false} relationships={List()} />
+  ))
+  .add('Favourites', () => (
+    <RelationshipList
+      favourites={true}
+      relationships={List([
+        {id: '1', name: "Fatinah Zahrah Baba"},
+        {id: '2', name: "Leonardo Lima"}
+      ])} />
+  ))
+  .add('Empty no text', () => (
+    <RelationshipList favourites={false} showEmptyText={false} relationships={List()} />
   ));
 
 storiesOf('RelationshipCard', module)

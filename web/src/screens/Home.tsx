@@ -1,11 +1,13 @@
 import * as React from 'react';
-import SearchBar from '../search/SearchBar';
-import FavouritesList from '../relationship/FavouritesList';
 import Screen from '../ui/Screen';
+import SearchBar from '../search/SearchBar';
+import Favourites from '../relationship/Favourites';
+import Recents from '../relationship/Recents';
 
 export default () => (
   <Screen>
     <SearchBar />
-    <FavouritesList />
+    <Favourites />
+    <Recents />
   </Screen>
 );
