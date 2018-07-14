@@ -5,7 +5,6 @@ import {Group, Input, Button} from './Els';
 const Container = styled(Group)`
   display: grid;
   grid-template: auto / 1fr 2px auto;
-  max-width: 450px;
 `;
 
 const QueryBox = styled(Input)`
