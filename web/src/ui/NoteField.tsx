@@ -12,7 +12,7 @@ export const Textarea = styled.textarea`
 `;
 
 const NoteField: React.StatelessComponent<Props> = ({content, onContentChange}) => {
-  return (<Textarea onChange={(e) => onContentChange(e.target.value)}>{content}</Textarea>)
+  return (<Textarea onChange={(e) => onContentChange(e.target.value)} defaultValue={content} />)
 };
 
 NoteField.defaultProps = {

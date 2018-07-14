@@ -1,13 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import {Group, Text, Link} from './Els';
+import { List } from 'immutable';
 
 interface RelationshipLink {
   name: string;
 }
 
 class Props {
-  relationships: ReadonlyArray<RelationshipLink>
+  relationships: List<RelationshipLink>
 }
 
 const NoFavouritesText = styled(Text)`
@@ -17,7 +18,7 @@ const NoFavouritesText = styled(Text)`
 
 const FavouritesList: React.StatelessComponent<Props> = ({relationships}) => {
   let links = [];
-  for (const {name} of relationships) {
+  for (const {name} of relationships.toArray()) {
     links.push((<FavouritesListEntry key={name} name={name} />));
   }
 
