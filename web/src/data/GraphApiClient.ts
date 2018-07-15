@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { List } from 'immutable';
-import { CardSummary } from "./DataTypes";
+import { CardSummary, ID, RelationshipCard } from "./DataTypes";
 
 const GRAPH_API_URL = process.env.GRAPH_API_URL || 'http://localhost:8080/query';
 
@@ -23,7 +23,45 @@ interface CardSummariesResponse {
         isFavourite: boolean;
       }>;
     };
+  };
+}
+
+const relationshipCardQuery = `{
+  me {
+    relationshipCards {
+      id
+      name
+      memo
+      isFavourite
+      notes {
+        deltaJson
+      }
+    }
   }
+}`;
+
+interface RelationshipCardResponse {
+  data: {
+    me: {
+      relationshipCards: ReadonlyArray<{
+        id: string;
+        name: string;
+        memo: string;
+        notes: {
+          deltaJson: string;
+        };
+        isFavourite: boolean;
+      }>;
+    };
+  };
+}
+
+interface Delta {
+  operations: ReadonlyArray<{
+    insert?: {
+      content: string;
+    };
+  }>;
 }
 
 class GraphApiClient {
@@ -34,20 +72,42 @@ class GraphApiClient {
   async fetchCardSummaries(): Promise<List<CardSummary>> {
     const res = await this.graphRequest<CardSummariesResponse>(cardSummariesQuery);
 
-    const summaries = res.data.data.me.relationshipCards.map(
+    const summaries = res.data.me.relationshipCards.map(
       ({id, name, isFavourite}) => ({id, name, favourite: isFavourite}));
 
     return List(summaries);
   }
 
-  private async graphRequest<T>(query: string): Promise<AxiosResponse<T>> {
-    return axios({
-      url: GRAPH_API_URL,
-      method: 'post',
-      data: {
-        query
-      },
-    });
+  async fetchRelationshipCard(id: ID): Promise<RelationshipCard> {
+    // TODO: Update the API so we can fetch a single card.
+    const res = await this.graphRequest<RelationshipCardResponse>(relationshipCardQuery);
+
+    for (let card of res.data.me.relationshipCards) {
+      if (card.id === id) {
+        const {id, name, memo: tagline, notes: {deltaJson}, isFavourite: favourite} = card;
+        const notes = GraphApiClient.convertToPlainText(JSON.parse(deltaJson));
+        return {id, name, tagline, notes, favourite};
+      }
+    }
+
+    throw 'Relationship card not found: '+id;
+  }
+
+  private async graphRequest<T>(query: string): Promise<T> {
+    const resp = await axios.post<T>(GRAPH_API_URL, { query });
+    return resp.data;
+  }
+
+  private static convertToPlainText(delta: Delta): string {
+    let out = '';
+
+    for (let op of delta.operations) {
+      if (op.insert) {
+        out += op.insert.content;
+      }
+    }
+
+    return out;
   }
 }
 

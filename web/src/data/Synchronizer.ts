@@ -15,8 +15,9 @@ const sync = new class Synchronizer {
     store.appendCardSummaries(cardSummaries);
   }
 
-  requireRelationshipCard(id: ID) {
-
+  async requireRelationshipCard(id: ID) {
+    const relationshipCard = await this.client.fetchRelationshipCard(id);
+    store.setRelationshipCard(relationshipCard);
   }
 }
 

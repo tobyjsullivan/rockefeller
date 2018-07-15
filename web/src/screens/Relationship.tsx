@@ -1,21 +1,21 @@
 import * as React from 'react';
-import RelationshipCard from '../ui/RelationshipCard';
+import RelationshipCard from '../relationship/RelationshipCard';
 import Screen from '../ui/Screen';
 import HomeLink from '../ui/HomeLink';
 
-const Relationship: React.StatelessComponent = () => {
-  const relationshipCard = {
-    name: 'Ingrid A. Davis',
-    tagline: 'Worked together at Megacorp',
-    notes: 'Notes...',
-  }
+interface Props {
+  match: {
+    params: {
+      id: string;
+    };
+  };
+}
+
+const Relationship: React.StatelessComponent<Props> = ({match: {params: { id }}}) => {
   return (
     <Screen>
       <HomeLink />
-      <RelationshipCard
-        name={relationshipCard.name}
-        tagline={relationshipCard.tagline}
-        notes={relationshipCard.notes} />
+      <RelationshipCard id={id} />
     </Screen>
   );
 };
