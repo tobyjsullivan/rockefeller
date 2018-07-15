@@ -1,4 +1,4 @@
-.PHONY: build package format clean
+.PHONY: build serve package format clean
 
 build/lambda_handler: *.go */**.go
 	GOOS=linux GOARCH=amd64 go build -o build/lambda_handler lambda_handler.go
