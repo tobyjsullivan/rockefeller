@@ -15,13 +15,15 @@ const cardSummariesQuery = `{
 }`;
 
 interface CardSummariesResponse {
-  me: {
-    relationshipCards: ReadonlyArray<{
-      id: string;
-      name: string;
-      isFavourite: boolean;
-    }>;
-  };
+  data: {
+    me: {
+      relationshipCards: ReadonlyArray<{
+        id: string;
+        name: string;
+        isFavourite: boolean;
+      }>;
+    };
+  }
 }
 
 class GraphApiClient {
@@ -32,7 +34,7 @@ class GraphApiClient {
   async fetchCardSummaries(): Promise<List<CardSummary>> {
     const res = await this.graphRequest<CardSummariesResponse>(cardSummariesQuery);
 
-    const summaries = res.data.me.relationshipCards.map(
+    const summaries = res.data.data.me.relationshipCards.map(
       ({id, name, isFavourite}) => ({id, name, favourite: isFavourite}));
 
     return List(summaries);

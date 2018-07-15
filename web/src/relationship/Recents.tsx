@@ -2,7 +2,8 @@ import * as React from 'react';
 import { decorate, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import RelationshipList from '../ui/RelationshipList';
-import RelationshipDB from './RelationshipDB';
+import Synchronizer from '../data/Synchronizer';
+import { store } from '../data/Store';
 
 interface State {
   relationships: ReadonlyArray<RelationshipLink>;
@@ -13,8 +14,12 @@ interface RelationshipLink {
 }
 
 class Recents extends React.Component<{}, State> {
+  componentDidMount() {
+    Synchronizer.requireCardSummaries();
+  }
+
   get recentLinks() {
-    return RelationshipDB.relationships.filter(r => !r.favourite);
+    return store.cardSummaries.filter(r => !r.favourite);
   }
 
   render() {
