@@ -10,4 +10,4 @@ export default () => {
     </BrowserRouter>),
     document.getElementById('root')
   );
-}
+};
