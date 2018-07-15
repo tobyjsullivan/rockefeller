@@ -18,3 +18,15 @@ module "staging_env" {
 output "api_invoke_url" {
   value = "${module.staging_env.api_invoke_url}"
 }
+
+output "s3_data_region" {
+  value = "${module.staging_env.s3_data_region}"
+}
+
+output "s3_data_bucket" {
+  value = "${module.staging_env.s3_data_bucket}"
+}
+
+output "s3_data_key" {
+  value = "${module.staging_env.s3_data_key}"
+}

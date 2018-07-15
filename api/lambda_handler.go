@@ -1,24 +1,17 @@
 package main
 
 import (
-	"encoding/json"
-	"errors"
-	"fmt"
-	"log"
-	"net/http"
-
-	"./graph"
+	"./request"
 	"github.com/aws/aws-lambda-go/lambda"
+	"encoding/base64"
+	"log"
 )
 
 type ApiEvent struct {
 	Body       string `json:"body"`
 	HttpMethod string `json:"httpMethod"`
 	Path       string `json:"path"`
-}
-
-type QueryRequest struct {
-	Query string `json:"query"`
+	Headers    map[string]string `json:"headers"`
 }
 
 type ApiResponse struct {
@@ -28,49 +21,34 @@ type ApiResponse struct {
 	IsBase64Encoded bool              `json:"isBase64Encoded"`
 }
 
-type ResponseBody struct {
-	Data   interface{} `json:"data"`
-	Errors []string    `json:"errors"`
-}
-
-func generateApiResponse(statusCode int, body interface{}) (ApiResponse, error) {
-	if content, err := json.Marshal(body); err != nil {
-		return ApiResponse{}, err
-	} else {
-		return ApiResponse{
-			StatusCode:      statusCode,
-			Body:            string(content),
-			Headers:         map[string]string{},
-			IsBase64Encoded: false,
-		}, nil
-	}
-}
-
 func HandleLambdaEvent(event ApiEvent) (ApiResponse, error) {
-	log.Printf("Request path: %s\n", event.Path)
-	log.Printf("Request method: %s\n", event.HttpMethod)
-	log.Printf("Request body: %s\n", event.Body)
+	res, err := request.Handle(request.Request{
+		Method: event.HttpMethod,
+		Path:   event.Path,
+		Body:   event.Body,
+		Headers: event.Headers,
+	})
 
-	if event.Path == "/query" && event.HttpMethod == http.MethodPost {
-		var queryRequest QueryRequest
-		err := json.Unmarshal([]byte(event.Body), &queryRequest)
-		if err != nil {
-			return generateApiResponse(http.StatusBadRequest, ResponseBody{Errors: []string{err.Error()}})
-		}
-
-		return handleGraphQuery(&queryRequest)
+	if err != nil {
+		return ApiResponse{}, err
 	}
 
-	return ApiResponse{}, errors.New(fmt.Sprintf("Unexpected query: %s %s", event.HttpMethod, event.Path))
-}
-
-func handleGraphQuery(query *QueryRequest) (ApiResponse, error) {
-	r := graph.PerformQuery(query.Query)
-	if len(r.Errors) > 0 {
-		return generateApiResponse(http.StatusBadRequest, r)
+	var body string
+	var isEncoded bool
+	if res.BinaryData {
+		body = base64.StdEncoding.EncodeToString(res.Body)
+		isEncoded = true
+	} else {
+		body = string(res.Body)
+		isEncoded = false
 	}
 
-	return generateApiResponse(http.StatusOK, r)
+	return ApiResponse{
+		StatusCode:      res.StatusCode,
+		Headers:         res.Headers,
+		Body:            body,
+		IsBase64Encoded: isEncoded,
+	}, nil
 }
 
 func main() {
