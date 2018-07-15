@@ -2,7 +2,11 @@ import * as React from 'react';
 import { decorate, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import RelationshipList from '../ui/RelationshipList';
-import RelationshipDB from './RelationshipDB';
+// import RelationshipDB from './RelationshipDB';
+import Synchronizer from '../data/Synchronizer';
+import { store } from '../data/Store';
+import { CardSummary } from '../data/DataTypes';
+import { Iterable } from 'immutable';
 
 interface State {
   relationships: ReadonlyArray<RelationshipLink>;
@@ -14,8 +18,14 @@ interface RelationshipLink {
 }
 
 class Favourites extends React.Component<{}, State> {
-  get favouriteLinks() {
-    return RelationshipDB.relationships.filter(r => r.favourite);
+  get favouriteLinks(): Iterable<any, CardSummary> {
+    console.log('store: %o', store);
+    console.log('cardSummaries: %o', store.cardSummaries);
+    return store.cardSummaries.filter(r => r.favourite);
+  }
+
+  componentDidMount() {
+    Synchronizer.requireCardSummaries();
   }
 
   render() {
