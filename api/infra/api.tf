@@ -1,6 +1,11 @@
 variable "lambda_package" {}
 variable "env" {}
 
+// Some changes require a stage redeployment. That can be invoked by updating this version.
+variable "api_schema_version" {
+  default = "1"
+}
+
 provider "random" {}
 
 resource "random_id" "handler_id" {
@@ -129,7 +134,7 @@ resource "aws_api_gateway_integration" "lambda_options" {
   resource_id = "${aws_api_gateway_method.proxy_options.resource_id}"
   http_method = "${aws_api_gateway_method.proxy_options.http_method}"
 
-  integration_http_method = "OPTIONS"
+  integration_http_method = "POST"
   type                    = "AWS_PROXY"
   uri                     = "${aws_lambda_function.handler.invoke_arn}"
 }
@@ -139,6 +144,10 @@ resource "aws_api_gateway_deployment" "api_deployment" {
 
   rest_api_id = "${aws_api_gateway_rest_api.api.id}"
   stage_name  = "${var.env}"
+
+  variables {
+    api_version = "${var.api_schema_version}"
+  }
 }
 
 resource "aws_lambda_permission" "apigw" {

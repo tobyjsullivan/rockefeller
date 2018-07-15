@@ -4,7 +4,6 @@ import (
 	"./request"
 	"github.com/aws/aws-lambda-go/lambda"
 	"encoding/base64"
-	"log"
 )
 
 type ApiEvent struct {

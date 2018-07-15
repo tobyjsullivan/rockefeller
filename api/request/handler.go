@@ -10,6 +10,7 @@ import (
 )
 
 const ALLOWED_ORIGIN = "*"
+const HEADER_ORIGIN = "origin"
 
 type Request struct {
 	Headers map[string]string
@@ -35,6 +36,7 @@ type responseBody struct {
 }
 
 func Handle(req Request) (Response, error) {
+	req.Headers = normaliseHeaders(req.Headers)
 	log.Println(req)
 
 	if req.Path != "/query" {
@@ -79,8 +81,19 @@ func Handle(req Request) (Response, error) {
 
 }
 
+func normaliseHeaders(in map[string]string) map[string]string {
+	out := make(map[string]string)
+
+	for k, v := range in {
+		norm := strings.ToLower(k)
+		out[norm] = v
+	}
+
+	return out
+}
+
 func determineCorsHeaders(req Request) map[string]string {
-	origin, ok := req.Headers["Origin"]
+	origin, ok := req.Headers[HEADER_ORIGIN]
 	if !ok || origin == "" {
 		return map[string]string{}
 	}
