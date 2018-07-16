@@ -62,6 +62,21 @@ mutation {
 }
 `;
 
+const createRelationshipCardQuery = (name: string) => `
+mutation {
+  newCard: createRelationshipCard(name: ${JSON.stringify(name)}) {
+    id
+  }
+}`;
+
+interface CreateRelationshipCardResponse {
+  data: {
+    newCard: {
+      id: string;
+    };
+  };
+}
+
 interface Delta {
   operations: ReadonlyArray<{
     insert?: {
@@ -84,6 +99,19 @@ class GraphApiClient {
     return List(summaries);
   }
 
+  async fetchCardSummary(id: ID): Promise<CardSummary> {
+    const res = await this.graphRequest<CardSummariesResponse>(cardSummariesQuery);
+
+    for (let card of res.data.me.relationshipCards) {
+      if (card.id === id) {
+        const {id, name, isFavourite: favourite} = card;
+        return {id, name, favourite};
+      }
+    }
+
+    throw 'Relationship card not found: '+id;
+  }
+
   async fetchRelationshipCard(id: ID): Promise<RelationshipCard> {
     // TODO: Update the API so we can fetch a single card.
     const res = await this.graphRequest<RelationshipCardResponse>(relationshipCardQuery);
@@ -104,7 +132,14 @@ class GraphApiClient {
     const jsonString = JSON.stringify(deltaJson);
     const query = updateRelationshipCardNotesQuery(id, jsonString);
 
-    const res = await this.graphRequest<RelationshipCardResponse>(query);
+    await this.graphRequest<{}>(query);
+  }
+
+  async createRelationshipCard(name: string): Promise<ID> {
+    const query = createRelationshipCardQuery(name);
+    const result = await this.graphRequest<CreateRelationshipCardResponse>(query);
+
+    return result.data.newCard.id;
   }
 
   private async graphRequest<T>(query: string): Promise<T> {

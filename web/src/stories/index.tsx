@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 import StoryRouter from './StoryRouter';
 import RelationshipList from '../ui/RelationshipList';
 import RelationshipCard from '../ui/RelationshipCard';
-import SearchBar from '../ui/SearchBar';
+import Omnibar from '../ui/Omnibar';
 import NoteField from '../ui/NoteField';
 import {Button, Text, Heading} from '../ui/Els';
 import { List } from 'immutable';
@@ -22,15 +22,15 @@ storiesOf('Heading', module)
 
 storiesOf('SearchBar', module)
   .add('default', () => (
-    <SearchBar
+    <Omnibar
       onQueryChange={action('query-changed')}
-      onSearchClick={action('search-clicked')} />
+      onAddClick={action('search-clicked')} />
   ))
   .add('with text', () => (
-    <SearchBar
+    <Omnibar
       query="Marty McFly"
       onQueryChange={action('query-changed')}
-      onSearchClick={action('search-clicked')} />
+      onAddClick={action('search-clicked')} />
   ));
 
 storiesOf('RelationshipList', module)

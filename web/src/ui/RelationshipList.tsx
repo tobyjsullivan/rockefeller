@@ -2,6 +2,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 import {Group, Text, Link} from './Els';
 import { Iterable } from 'immutable';
+import { buildUrl } from '../relationship/UrlBuilder';
 
 interface RelationshipLink {
   id: string;
@@ -21,7 +22,17 @@ const NoEntriesText = styled(Text)`
 
 const RelationshipList: React.StatelessComponent<Props> = ({favourites, relationships, showEmptyText}) => {
   let links = [];
-  for (const {id, name} of relationships.toArray()) {
+  const sorted = relationships.sort((a, b) => {
+    if (a.name < b.name) {
+      return -1;
+    } else if (a.name > b.name) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+
+  for (const {id, name} of sorted.toArray()) {
     links.push((<RelationshipListEntry key={id} id={id} name={name} favourite={favourites} />));
   }
 
@@ -55,7 +66,7 @@ interface EntryProps {
 const RelationshipListEntry: React.StatelessComponent<EntryProps> = ({id, name, favourite}) => {
   const fav = favourite ? '★' : null;
   return (
-    <Text>{fav} <Link to={`/relationship/${id}`}>{name}</Link></Text>
+    <Text>{fav} <Link to={buildUrl(id)}>{name}</Link></Text>
   );
 };
 

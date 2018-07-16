@@ -12,7 +12,7 @@ const QueryBox = styled(Input)`
   grid-column-end: 2;
 `;
 
-const SearchButton = styled(Button)`
+const AddButton = styled(Button)`
   grid-column-start: 3;
   grid-column-end: 4;
   width: 55px;
@@ -21,14 +21,14 @@ const SearchButton = styled(Button)`
 interface Props {
   query?: string;
   onQueryChange: (text: string) => void;
-  onSearchClick: () => void;
+  onAddClick: () => void;
 }
 
-const SearchBar: React.StatelessComponent<Props> = ({query, onQueryChange, onSearchClick}) => (
+const Omnibar: React.StatelessComponent<Props> = ({query, onQueryChange, onAddClick}) => (
   <Container>
     <QueryBox type="text" value={query} onChange={(e) => onQueryChange(e.target.value)} />
-    <SearchButton onClick={() => onSearchClick()}>Search</SearchButton>
+    <AddButton onClick={() => onAddClick()}>+</AddButton>
   </Container>
 );
 
-export default SearchBar;
+export default Omnibar;
