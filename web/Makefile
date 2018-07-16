@@ -10,6 +10,9 @@ serve: clean
 	export GRAPH_API_URL="$$(cd ../infra/staging && terraform output api_invoke_url)/query" && \
 		parcel serve $(IDX)
 
+local: clean
+	parcel serve $(IDX)
+
 deploy/staging: build
 	aws s3 sync \
 		--delete \

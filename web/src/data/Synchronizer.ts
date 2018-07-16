@@ -37,6 +37,11 @@ const sync = new class Synchronizer {
     this.requireCardSummary(id);
     return id;
   }
+
+  async deleteRelationshipCard(id: ID) {
+    await this.client.deleteRelationshipCard(id);
+    this.requireCardSummaries();
+  }
 }
 
 export default sync;

@@ -77,6 +77,12 @@ interface CreateRelationshipCardResponse {
   };
 }
 
+const deleteRelationshipCardQuery = (id: ID) => `
+mutation {
+  deleteRelationshipCard(cardId: ${JSON.stringify(id)})
+}
+`;
+
 interface Delta {
   operations: ReadonlyArray<{
     insert?: {
@@ -140,6 +146,11 @@ class GraphApiClient {
     const result = await this.graphRequest<CreateRelationshipCardResponse>(query);
 
     return result.data.newCard.id;
+  }
+
+  async deleteRelationshipCard(id: ID) {
+    const query = deleteRelationshipCardQuery(id);
+    await this.graphRequest<{}>(query);
   }
 
   private async graphRequest<T>(query: string): Promise<T> {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import {Group, Heading, Text} from './Els';
+import {Group, Heading, Text, Button} from './Els';
 import NoteField from './NoteField';
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
   tagline: string;
   notes: string;
   onNotesChange?: (content: string) => any;
+  onDeleteClick?: () => any;
 }
 
 const Tagline = styled(Text)`
@@ -15,11 +16,13 @@ const Tagline = styled(Text)`
   margin-bottom: 1em;
 `;
 
-const RelationshipCard: React.StatelessComponent<Props> = ({name, tagline, notes, onNotesChange}) => (
+const RelationshipCard: React.StatelessComponent<Props> =
+  ({name, tagline, notes, onNotesChange, onDeleteClick}) => (
   <Group>
     <Heading>{name}</Heading>
     <Tagline>{tagline}</Tagline>
     <NoteField content={notes} onContentChange={onNotesChange} />
+    <Button onClick={onDeleteClick}>🗑️</Button>
   </Group>
 );
 

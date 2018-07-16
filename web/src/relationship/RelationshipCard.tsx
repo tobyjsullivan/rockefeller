@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { decorate, computed } from 'mobx';
 import { observer } from 'mobx-react';
+import { Redirect } from 'react-router';
 import Synchronizer from '../data/Synchronizer';
 import { store } from '../data/Store';
 import Component from '../ui/RelationshipCard';
@@ -11,11 +12,14 @@ interface Props {
 }
 
 interface State {
-  id?: string
+  id?: string;
+  redirectHome: boolean;
 }
 
 class RelationshipCard extends React.Component<Props, State> {
-  state = {};
+  state = {
+    redirectHome: false,
+  };
 
   static getDerivedStateFromProps(props: Props, state: any) {
     if (!props || !props.id) {
@@ -43,7 +47,20 @@ class RelationshipCard extends React.Component<Props, State> {
     Synchronizer.updateRelationshipCardNotes(id, content);
   }
 
+  handleDeleteClicked = () => {
+    const {id} = this.props;
+    if (window.confirm('Delete this card?')) {
+      Synchronizer.deleteRelationshipCard(id);
+      this.setState({redirectHome: true});
+    }
+  }
+
   render() {
+    const {redirectHome} = this.state;
+    if (redirectHome) {
+      return (<Redirect to="/" />);
+    }
+
     if (!this.relationshipCard) {
       return (<Text>Loading...</Text>);
     }
@@ -55,7 +72,8 @@ class RelationshipCard extends React.Component<Props, State> {
         name={name}
         notes={notes}
         tagline={tagline}
-        onNotesChange={this.handleNotesChanged} />
+        onNotesChange={this.handleNotesChanged}
+        onDeleteClick={this.handleDeleteClicked} />
     );
   }
 }
