@@ -4,7 +4,6 @@ import { HashRouter } from 'react-router-dom';
 import HomeScreen from '../screens/Home';
 import RelationshipScreen from '../screens/Relationship';
 
-
 const App = () => {
   return (
     <HashRouter>

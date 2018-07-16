@@ -7,6 +7,7 @@ interface Props {
   name: string;
   tagline: string;
   notes: string;
+  onNotesChange?: (content: string) => any;
 }
 
 const Tagline = styled(Text)`
@@ -14,11 +15,11 @@ const Tagline = styled(Text)`
   margin-bottom: 1em;
 `;
 
-const RelationshipCard: React.StatelessComponent<Props> = ({name, tagline, notes}) => (
+const RelationshipCard: React.StatelessComponent<Props> = ({name, tagline, notes, onNotesChange}) => (
   <Group>
     <Heading>{name}</Heading>
     <Tagline>{tagline}</Tagline>
-    <NoteField content={notes} />
+    <NoteField content={notes} onContentChange={onNotesChange} />
   </Group>
 );
 

@@ -38,6 +38,11 @@ class RelationshipCard extends React.Component<Props, State> {
     return store.getRelationshipCard(id);
   }
 
+  handleNotesChanged = (content: string) => {
+    const {id} = this.props;
+    Synchronizer.updateRelationshipCardNotes(id, content);
+  }
+
   render() {
     if (!this.relationshipCard) {
       return (<Text>Loading...</Text>);
@@ -45,7 +50,13 @@ class RelationshipCard extends React.Component<Props, State> {
 
     const {name, notes, tagline} = this.relationshipCard;
 
-    return (<Component name={name} notes={notes} tagline={tagline} />);
+    return (
+      <Component
+        name={name}
+        notes={notes}
+        tagline={tagline}
+        onNotesChange={this.handleNotesChanged} />
+    );
   }
 }
 

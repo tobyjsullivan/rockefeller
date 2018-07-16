@@ -56,6 +56,12 @@ interface RelationshipCardResponse {
   };
 }
 
+const updateRelationshipCardNotesQuery = (id: string, deltaJson: string) => `
+mutation {
+  replaceRelationshipCardNotes(cardId: ${JSON.stringify(id)}, deltaJson: ${JSON.stringify(deltaJson)})
+}
+`;
+
 interface Delta {
   operations: ReadonlyArray<{
     insert?: {
@@ -93,6 +99,14 @@ class GraphApiClient {
     throw 'Relationship card not found: '+id;
   }
 
+  async updateRelationshipCardNotes(id: ID, notes: string) {
+    const deltaJson = GraphApiClient.convertToDelta(notes);
+    const jsonString = JSON.stringify(deltaJson);
+    const query = updateRelationshipCardNotesQuery(id, jsonString);
+
+    const res = await this.graphRequest<RelationshipCardResponse>(query);
+  }
+
   private async graphRequest<T>(query: string): Promise<T> {
     const resp = await axios.post<T>(GRAPH_API_URL, { query });
     return resp.data;
@@ -108,6 +122,21 @@ class GraphApiClient {
     }
 
     return out;
+  }
+
+  private static convertToDelta(notes: string): Delta {
+    const lines = notes.split("\n");
+    const result = { operations: Array() };
+
+    for (let line of lines) {
+      result.operations.push({
+        insert: {
+          content: line + "\n",
+        },
+      });
+    }
+
+    return result;
   }
 }
 
