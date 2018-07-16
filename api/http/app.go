@@ -28,8 +28,6 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	log.Println("Received headers:", r.Header)
-
 	res, err := request.Handle(request.Request{
 		Method:  r.Method,
 		Path:    r.URL.Path,

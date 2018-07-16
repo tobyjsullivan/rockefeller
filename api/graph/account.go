@@ -80,15 +80,16 @@ func resolveAccountRelationshipCards(p graphql.ResolveParams) (interface{}, erro
 		return nil, errors.New("not an Account")
 	}
 
+	cards := account.FindRelationshipCards()
 	var out []*data.RelationshipCard
 	if filterOnFavourites {
-		for _, card := range account.RelationshipCards {
+		for _, card := range cards {
 			if card.Favourite == includeFavourites {
 				out = append(out, card)
 			}
 		}
 	} else {
-		out = account.RelationshipCards
+		out = cards
 	}
 
 	return out, nil

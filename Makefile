@@ -13,6 +13,7 @@ staging/init:
 	cd infra/staging && terraform init
 
 staging/deploy:
+	cd api && make build
 	cd infra/staging && terraform apply -auto-approve -target='module.staging_env.module.api.aws_lambda_function.handler'
 	cd web && make deploy/staging
 

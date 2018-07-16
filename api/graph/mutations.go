@@ -83,6 +83,15 @@ var (
 				},
 				Resolve: resolveReplaceRelationshipCardNotes,
 			},
+			"deleteRelationshipCard": &graphql.Field{
+				Type: graphql.Boolean,
+				Args: graphql.FieldConfigArgument{
+					argCardId: &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.ID),
+					},
+				},
+				Resolve: resolveDeleteRelationshipCard,
+			},
 		},
 	})
 )
@@ -109,7 +118,7 @@ func resolveCreateRelationshipCard(p graphql.ResolveParams) (interface{}, error)
 		ID:   id.String(),
 		Name: name,
 	}
-	acct.RelationshipCards = append(acct.RelationshipCards, card)
+	acct.AddRelationshipCard(card)
 
 	err = data.Save(acct)
 	if err != nil {
@@ -137,7 +146,7 @@ func resolveUpdateRelationshipCardName(p graphql.ResolveParams) (interface{}, er
 	}
 
 	// Find the card to modify
-	card := acct.FindRelationshipCard(id)
+	card := acct.GetRelationshipCard(id)
 	if card == nil {
 		return nil, errors.New("failed to find card with specified ID")
 	}
@@ -175,7 +184,7 @@ func resolveUpdateRelationshipCardMemo(p graphql.ResolveParams) (interface{}, er
 	}
 
 	// Find the card to modify
-	card := acct.FindRelationshipCard(id)
+	card := acct.GetRelationshipCard(id)
 	if card == nil {
 		return nil, errors.New("failed to find card with specified ID")
 	}
@@ -215,7 +224,7 @@ func resolveUpdateRelationshipCardIsFavourite(p graphql.ResolveParams) (interfac
 	}
 
 	// Find the card to modify
-	card := acct.FindRelationshipCard(id)
+	card := acct.GetRelationshipCard(id)
 	if card == nil {
 		return nil, errors.New("failed to find card with specified ID")
 	}
@@ -249,7 +258,7 @@ func resolveReplaceRelationshipCardNotes(p graphql.ResolveParams) (interface{}, 
 	}
 
 	// Find the card to modify
-	card := acct.FindRelationshipCard(id)
+	card := acct.GetRelationshipCard(id)
 	if card == nil {
 		return nil, errors.New("failed to find card with specified ID")
 	}
@@ -262,4 +271,23 @@ func resolveReplaceRelationshipCardNotes(p graphql.ResolveParams) (interface{}, 
 
 	res, err := json.Marshal(&notes)
 	return string(res), err
+}
+
+func resolveDeleteRelationshipCard(p graphql.ResolveParams) (interface{}, error) {
+	id, ok := p.Args[argCardId].(string)
+	if !ok {
+		return nil, errors.New("failed to parse cardId arg")
+	}
+
+	// Reload data on every mutation to ensure we are updating most recent version.
+	// Particularly important for multiple mutations in a single request (which will be resolved in series).
+	acct, err := data.Load()
+	if err != nil {
+		return nil, err
+	}
+
+	acct.RemoveRelationshipCard(id)
+
+	err = data.Save(acct)
+	return err == nil, err
 }

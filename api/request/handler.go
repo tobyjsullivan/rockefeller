@@ -7,6 +7,7 @@ import (
 	"../graph"
 	"strings"
 	"log"
+	"encoding/base64"
 )
 
 const ALLOWED_ORIGIN = "*"
@@ -37,7 +38,9 @@ type responseBody struct {
 
 func Handle(req Request) (Response, error) {
 	req.Headers = normaliseHeaders(req.Headers)
-	log.Println(req)
+
+	log.Println("Request:", req.Method, req.Path)
+	log.Println("Body:", base64.StdEncoding.EncodeToString([]byte(req.Body)))
 
 	if req.Path != "/query" {
 		return Response{
