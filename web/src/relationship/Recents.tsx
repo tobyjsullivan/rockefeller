@@ -22,7 +22,7 @@ class Recents extends React.Component<{}, State> {
     const filter = store.searchQuery;
     let relationships = store.cardSummaries.filter(r => !r.favourite);
     if (filter !== '') {
-      relationships = relationships.filter(r => r.name.search(filter) !== -1);
+      relationships = relationships.filter(r => new RegExp(filter, 'i').test(r.name));
     }
     return relationships;
   }
