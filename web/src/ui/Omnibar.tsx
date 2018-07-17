@@ -15,7 +15,6 @@ const QueryBox = styled(Input)`
 const AddButton = styled(Button)`
   grid-column-start: 3;
   grid-column-end: 4;
-  width: 55px;
 `;
 
 interface Props {
@@ -27,7 +26,7 @@ interface Props {
 const Omnibar: React.StatelessComponent<Props> = ({query, onQueryChange, onAddClick}) => (
   <Container>
     <QueryBox type="text" value={query} onChange={(e) => onQueryChange(e.target.value)} />
-    <AddButton onClick={() => onAddClick()}>+</AddButton>
+    <AddButton onClick={() => onAddClick()}>✚</AddButton>
   </Container>
 );
 

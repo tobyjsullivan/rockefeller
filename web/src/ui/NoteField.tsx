@@ -1,5 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import Theme from './Theme';
 
 interface Props {
   content: string
@@ -8,7 +9,8 @@ interface Props {
 
 export const Textarea = styled.textarea`
   width: 100%;
-  height: 350px;
+  height: 250px;
+  font-size: ${Theme.fontSize}
 `;
 
 const NoteField: React.StatelessComponent<Props> = ({content, onContentChange}) => {
