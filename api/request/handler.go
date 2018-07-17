@@ -29,6 +29,7 @@ type Response struct {
 
 type queryRequest struct {
 	Query string `json:"query"`
+	Variables map[string]interface{} `json:"variables"`
 }
 
 type responseBody struct {
@@ -121,7 +122,7 @@ func determineCorsHeaders(req Request) map[string]string {
 }
 
 func handleGraphQuery(query *queryRequest) (Response, error) {
-	r := graph.PerformQuery(query.Query)
+	r := graph.PerformQuery(query.Query, query.Variables)
 	if len(r.Errors) > 0 {
 		return generateApiResponse(http.StatusBadRequest, r)
 	}

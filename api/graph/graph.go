@@ -34,8 +34,8 @@ func init() {
 	}
 }
 
-func PerformQuery(query string) *graphql.Result {
-	params := graphql.Params{Schema: schema, RequestString: query}
+func PerformQuery(query string, variables map[string]interface{}) *graphql.Result {
+	params := graphql.Params{Schema: schema, RequestString: query, VariableValues: variables}
 	return graphql.Do(params)
 }
 
