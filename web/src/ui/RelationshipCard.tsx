@@ -22,7 +22,7 @@ const RelationshipCard: React.StatelessComponent<Props> =
     <Heading>{name}</Heading>
     <Tagline>{tagline}</Tagline>
     <NoteField content={notes} onContentChange={onNotesChange} />
-    <Button onClick={onDeleteClick}>🗑️</Button>
+    <Button onClick={onDeleteClick}>♲</Button>
   </Group>
 );
 

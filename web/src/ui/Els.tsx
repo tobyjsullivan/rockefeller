@@ -23,20 +23,22 @@ export const Heading = styled.h1`
 export const Group = styled.div``;
 
 export const Input = styled.input`
-  height: 22px;
+  height: calc(${Theme.fontSize} + 11px);
   margin: 0;
   padding: 2px 7px;
   border 1px solid ${Theme.fgColor};
   font-family: ${Theme.fontFamily};
+  font-size: ${Theme.fontSize};
   box-sizing: border-box;
 `;
 
 export const Button = styled.button`
-  height: 22px;
+  height: calc(${Theme.fontSize} + 11px);
   margin: 0;
   padding: 2px 7px;
   border: 1px solid ${Theme.fgColor};
   background-color: ${Theme.bgColor};
   font-family: ${Theme.fontFamily};
+  font-size: ${Theme.fontSize};
   box-sizing: border-box;
 `;
