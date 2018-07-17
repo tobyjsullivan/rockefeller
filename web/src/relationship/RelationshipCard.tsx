@@ -42,9 +42,14 @@ class RelationshipCard extends React.Component<Props, State> {
     return store.getRelationshipCard(id);
   }
 
-  handleNotesChanged = (content: string) => {
+  handleNameChanged = (name: string) => {
     const {id} = this.props;
-    Synchronizer.updateRelationshipCardNotes(id, content);
+    Synchronizer.updateRelationshipCardName(id, name);
+  }
+
+  handleNotesChanged = (notes: string) => {
+    const {id} = this.props;
+    Synchronizer.updateRelationshipCardNotes(id, notes);
   }
 
   handleDeleteClicked = () => {
@@ -72,6 +77,7 @@ class RelationshipCard extends React.Component<Props, State> {
         name={name}
         notes={notes}
         tagline={tagline}
+        onNameChange={this.handleNameChanged}
         onNotesChange={this.handleNotesChanged}
         onDeleteClick={this.handleDeleteClicked} />
     );

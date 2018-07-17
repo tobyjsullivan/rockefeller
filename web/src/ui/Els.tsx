@@ -7,6 +7,7 @@ export const Text = styled.p`
   font-family: ${Theme.fontFamily};
   color: ${Theme.fgColor};
   font-size: ${Theme.fontSize};
+  line-height: calc(${Theme.fontSize} + 6px);
   margin 0;
 `;
 
@@ -17,6 +18,7 @@ export const Link = styled(RLink)`
 
 export const Heading = styled.h1`
   font-family: ${Theme.fontFamily};
+  font-size: ${Theme.fontSizeHeading};
   margin 0;
 `;
 

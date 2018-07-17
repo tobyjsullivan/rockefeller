@@ -15,8 +15,7 @@ interface Props {
   showEmptyText?: boolean;
 }
 
-const NoEntriesText = styled(Text)`
-  font-style: italic;
+const NoRelationshipsText = styled(Text)`
   text-align: center;
 `;
 
@@ -42,7 +41,7 @@ const RelationshipList: React.StatelessComponent<Props> = ({favourites, relation
     }
 
     return (
-      <NoEntriesText>No relationships yet.</NoEntriesText>
+      <NoRelationshipsText>☕</NoRelationshipsText>
     );
   }
 

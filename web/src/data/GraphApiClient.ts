@@ -56,15 +56,21 @@ interface RelationshipCardResponse {
   };
 }
 
-const updateRelationshipCardNotesQuery = (id: string, deltaJson: string) => `
-mutation {
-  replaceRelationshipCardNotes(cardId: ${JSON.stringify(id)}, deltaJson: ${JSON.stringify(deltaJson)})
+const updateRelationshipCardNameQuery = `
+mutation($id: ID!, $name: String!) {
+  updateRelationshipCardName(cardId: $id, name: $name)
 }
 `;
 
-const createRelationshipCardQuery = (name: string) => `
-mutation {
-  newCard: createRelationshipCard(name: ${JSON.stringify(name)}) {
+const updateRelationshipCardNotesQuery = `
+mutation($id: ID!, $deltaJson: String!) {
+  replaceRelationshipCardNotes(cardId: $id, deltaJson: $deltaJson)
+}
+`;
+
+const createRelationshipCardQuery = `
+mutation($name: String!) {
+  newCard: createRelationshipCard(name: $name) {
     id
   }
 }`;
@@ -77,9 +83,9 @@ interface CreateRelationshipCardResponse {
   };
 }
 
-const deleteRelationshipCardQuery = (id: ID) => `
-mutation {
-  deleteRelationshipCard(cardId: ${JSON.stringify(id)})
+const deleteRelationshipCardQuery = `
+mutation($id: ID!) {
+  deleteRelationshipCard(cardId: $id)
 }
 `;
 
@@ -133,28 +139,31 @@ class GraphApiClient {
     throw 'Relationship card not found: '+id;
   }
 
+  async updateRelationshipCardName(id: ID, name: string) {
+    await this.graphRequest<{}>(updateRelationshipCardNameQuery, {id, name});
+  }
+
   async updateRelationshipCardNotes(id: ID, notes: string) {
     const deltaJson = GraphApiClient.convertToDelta(notes);
     const jsonString = JSON.stringify(deltaJson);
-    const query = updateRelationshipCardNotesQuery(id, jsonString);
-
-    await this.graphRequest<{}>(query);
+    await this.graphRequest<{}>(updateRelationshipCardNotesQuery, {id, deltaJson: jsonString});
   }
 
   async createRelationshipCard(name: string): Promise<ID> {
-    const query = createRelationshipCardQuery(name);
-    const result = await this.graphRequest<CreateRelationshipCardResponse>(query);
+    const result = await this.graphRequest<CreateRelationshipCardResponse>(
+      createRelationshipCardQuery,
+      {name}
+    );
 
     return result.data.newCard.id;
   }
 
   async deleteRelationshipCard(id: ID) {
-    const query = deleteRelationshipCardQuery(id);
-    await this.graphRequest<{}>(query);
+    await this.graphRequest<{}>(deleteRelationshipCardQuery, {id});
   }
 
-  private async graphRequest<T>(query: string): Promise<T> {
-    const resp = await axios.post<T>(GRAPH_API_URL, { query });
+  private async graphRequest<T>(query: string, variables?: object): Promise<T> {
+    const resp = await axios.post<T>(GRAPH_API_URL, { query, variables });
     return resp.data;
   }
 

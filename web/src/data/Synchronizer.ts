@@ -27,6 +27,12 @@ const sync = new class Synchronizer {
     store.setRelationshipCard(relationshipCard);
   }
 
+  async updateRelationshipCardName(id: ID, name: string) {
+    await this.client.updateRelationshipCardName(id, name);
+    this.requireCardSummary(id);
+    this.requireRelationshipCard(id);
+  }
+
   async updateRelationshipCardNotes(id: ID, notes: string) {
     await this.client.updateRelationshipCardNotes(id, notes);
     this.requireRelationshipCard(id);
