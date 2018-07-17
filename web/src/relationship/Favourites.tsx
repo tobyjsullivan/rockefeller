@@ -22,13 +22,16 @@ class Favourites extends React.Component<{}, State> {
   }
 
   get favouriteLinks(): Iterable<any, CardSummary> {
-    console.log('store: %o', store);
-    console.log('cardSummaries: %o', store.cardSummaries);
-    return store.cardSummaries.filter(r => r.favourite);
+    const filter = store.searchQuery;
+    let relationships = store.cardSummaries.filter(r => r.favourite);
+    if (filter !== '') {
+      relationships = relationships.filter(r => r.name.search(filter) !== -1);
+    }
+    return relationships;
   }
 
   render() {
-    const relationships = this.favouriteLinks;
+    let relationships = this.favouriteLinks;
 
     return (
       <RelationshipList favourites={true} showEmptyText={false} relationships={relationships} />

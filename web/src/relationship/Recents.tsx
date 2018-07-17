@@ -19,7 +19,12 @@ class Recents extends React.Component<{}, State> {
   }
 
   get recentLinks() {
-    return store.cardSummaries.filter(r => !r.favourite);
+    const filter = store.searchQuery;
+    let relationships = store.cardSummaries.filter(r => !r.favourite);
+    if (filter !== '') {
+      relationships = relationships.filter(r => r.name.search(filter) !== -1);
+    }
+    return relationships;
   }
 
   render() {

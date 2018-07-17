@@ -5,8 +5,9 @@ import { ID, CardSummary, RelationshipCard } from './DataTypes';
 class Store {
   cardSummaries: List<CardSummary> = List();
   relationshipCards: Map<ID, RelationshipCard> = Map();
+  searchQuery: string = '';
 
-  getRelationshipCard(id: ID) {
+  getRelationshipCard(id: ID): RelationshipCard {
     return this.relationshipCards.get(id);
   }
 
@@ -26,6 +27,7 @@ class Store {
 decorate(Store, {
   cardSummaries: observable,
   relationshipCards: observable,
+  searchQuery: observable,
   appendCardSummaries: action,
   clearCardSummaries: action,
   setRelationshipCard: action,
