@@ -11,6 +11,7 @@ export const Textarea = styled.textarea`
   width: 100%;
   height: 250px;
   font-size: ${Theme.fontSize}
+  box-sizing: border-box;
 `;
 
 const NoteField: React.StatelessComponent<Props> = ({content, onContentChange}) => {
