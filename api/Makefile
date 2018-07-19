@@ -1,23 +1,36 @@
-.PHONY: build serve package format clean
+.PHONY: init serve package docker/build-base docker/build-lambda docker/build-local format clean
 
-build/lambda_handler: *.go */**.go
-	GOOS=linux GOARCH=amd64 go build -o build/lambda_handler lambda_handler.go
+init: docker/build-base
 
-build: build/lambda_handler
-
-build/package.zip: build/lambda_handler
-	zip -j build/package.zip build/lambda_handler
-
-serve:
+serve: build/api
 	export AWS_REGION="$$(cd ../infra/staging && terraform output s3_data_region)" && \
 		export DATA_BUCKET="$$(cd ../infra/staging && terraform output s3_data_bucket)" && \
 		export DATA_KEY="$$(cd ../infra/staging && terraform output s3_data_key)" && \
-		go run ./http/app.go
+		build/api
 
 package: build/package.zip
 
+build/api: docker/build-local
+
+build/package.zip: docker/build-lambda
+
+docker/build-base:
+	docker build --file Dockerfile.build-base -t build-base .
+
+docker/build-lambda:
+	docker build --file Dockerfile.build-lambda -t build-lambda .
+	docker rm build-lambda-container || true
+	docker run -it --name build-lambda-container build-lambda
+	docker cp build-lambda-container:/var/tmp/build/build/package.zip ./build/
+
+docker/build-local:
+	docker build --file Dockerfile.build-local -t build-local .
+	docker rm build-local-container || true
+	docker run -it --name build-local-container build-local
+	docker cp build-local-container:/var/tmp/build/build/api ./build/
+
 format:
-	gofmt -w *.go
+	gofmt -w **/*.go
 
 clean:
 	rm -rf build

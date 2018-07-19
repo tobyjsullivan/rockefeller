@@ -1,0 +1,5 @@
+FROM build-base
+
+ADD . ./
+
+ENTRYPOINT ["./bin/build-local.sh"]

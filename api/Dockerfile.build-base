@@ -1,0 +1,12 @@
+FROM golang:1.10
+
+RUN apt-get update && \
+    apt-get install -y zip && \
+    apt-get clean
+
+WORKDIR /var/tmp/build
+ADD . ./
+
+RUN go get -v -d
+
+VOLUME ["/var/tmp/build"]
