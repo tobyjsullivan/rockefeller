@@ -1,15 +1,23 @@
 package main
 
 import (
+	"./graph"
 	"./request"
+	"./s3data"
 	"github.com/aws/aws-lambda-go/lambda"
 	"encoding/base64"
+	"os"
+)
+
+var (
+	dataBucket = os.Getenv("DATA_BUCKET")
+	dataKey    = os.Getenv("DATA_KEY")
 )
 
 type ApiEvent struct {
-	Body       string `json:"body"`
-	HttpMethod string `json:"httpMethod"`
-	Path       string `json:"path"`
+	Body       string            `json:"body"`
+	HttpMethod string            `json:"httpMethod"`
+	Path       string            `json:"path"`
 	Headers    map[string]string `json:"headers"`
 }
 
@@ -20,11 +28,19 @@ type ApiResponse struct {
 	IsBase64Encoded bool              `json:"isBase64Encoded"`
 }
 
-func HandleLambdaEvent(event ApiEvent) (ApiResponse, error) {
-	res, err := request.Handle(request.Request{
-		Method: event.HttpMethod,
-		Path:   event.Path,
-		Body:   event.Body,
+type graphRequestHandler interface {
+	Handle(request.Request) (request.Response, error)
+}
+
+type lambdaRequestHandler struct {
+	graphHandler graphRequestHandler
+}
+
+func (lh *lambdaRequestHandler) HandleLambdaEvent(event ApiEvent) (ApiResponse, error) {
+	res, err := lh.graphHandler.Handle(request.Request{
+		Method:  event.HttpMethod,
+		Path:    event.Path,
+		Body:    event.Body,
 		Headers: event.Headers,
 	})
 
@@ -51,5 +67,8 @@ func HandleLambdaEvent(event ApiEvent) (ApiResponse, error) {
 }
 
 func main() {
-	lambda.Start(HandleLambdaEvent)
+	lambdaHandler := &lambdaRequestHandler{
+		graphHandler: request.New(graph.New(s3data.New(dataBucket, dataKey))),
+	}
+	lambda.Start(lambdaHandler.HandleLambdaEvent)
 }

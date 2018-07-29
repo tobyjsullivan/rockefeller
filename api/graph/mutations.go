@@ -18,85 +18,7 @@ const (
 	argDeltaJson = "deltaJson"
 )
 
-var (
-	mutationType = graphql.NewObject(graphql.ObjectConfig{
-		Name: "RootMutation",
-		Fields: graphql.Fields{
-			"createRelationshipCard": &graphql.Field{
-				Type:        relationshipCardType,
-				Description: "Create a new Relationship Card",
-				Args: graphql.FieldConfigArgument{
-					argName: &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-				},
-				Resolve: resolveCreateRelationshipCard,
-			},
-			"updateRelationshipCardName": &graphql.Field{
-				Type:        graphql.String,
-				Description: "Update the name of a Relationship Card",
-				Args: graphql.FieldConfigArgument{
-					argCardId: &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.ID),
-					},
-					argName: &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-				},
-				Resolve: resolveUpdateRelationshipCardName,
-			},
-			"updateRelationshipCardMemo": &graphql.Field{
-				Type:        graphql.String,
-				Description: "Update the memo of a Relationship Card",
-				Args: graphql.FieldConfigArgument{
-					argCardId: &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.ID),
-					},
-					argMemo: &graphql.ArgumentConfig{
-						Type: graphql.String,
-					},
-				},
-				Resolve: resolveUpdateRelationshipCardMemo,
-			},
-			"updateRelationshipCardIsFavourite": &graphql.Field{
-				Type:        graphql.Boolean,
-				Description: "Set or unset Relationship Card as favourite",
-				Args: graphql.FieldConfigArgument{
-					argCardId: &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.ID),
-					},
-					argFavourite: &graphql.ArgumentConfig{
-						Type: graphql.Boolean,
-					},
-				},
-				Resolve: resolveUpdateRelationshipCardIsFavourite,
-			},
-			"replaceRelationshipCardNotes": &graphql.Field{
-				Type: graphql.String,
-				Args: graphql.FieldConfigArgument{
-					argCardId: &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.ID),
-					},
-					argDeltaJson: &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-				},
-				Resolve: resolveReplaceRelationshipCardNotes,
-			},
-			"deleteRelationshipCard": &graphql.Field{
-				Type: graphql.Boolean,
-				Args: graphql.FieldConfigArgument{
-					argCardId: &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.ID),
-					},
-				},
-				Resolve: resolveDeleteRelationshipCard,
-			},
-		},
-	})
-)
-
-func resolveCreateRelationshipCard(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveCreateRelationshipCard(p graphql.ResolveParams) (interface{}, error) {
 	name, ok := p.Args[argName].(string)
 	if !ok {
 		return nil, errors.New("failed to parse name arg")
@@ -104,7 +26,7 @@ func resolveCreateRelationshipCard(p graphql.ResolveParams) (interface{}, error)
 
 	// Reload data on every mutation to ensure we are updating most recent version.
 	// Particularly important for multiple mutations in a single request (which will be resolved in series).
-	acct, err := data.Load()
+	acct, err := api.data.Load()
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +42,7 @@ func resolveCreateRelationshipCard(p graphql.ResolveParams) (interface{}, error)
 	}
 	acct.AddRelationshipCard(card)
 
-	err = data.Save(acct)
+	err = api.data.Save(acct)
 	if err != nil {
 		return nil, err
 	}
@@ -128,7 +50,7 @@ func resolveCreateRelationshipCard(p graphql.ResolveParams) (interface{}, error)
 	return card, nil
 }
 
-func resolveUpdateRelationshipCardName(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveUpdateRelationshipCardName(p graphql.ResolveParams) (interface{}, error) {
 	id, ok := p.Args[argCardId].(string)
 	if !ok {
 		return nil, errors.New("failed to parse cardId arg")
@@ -140,7 +62,7 @@ func resolveUpdateRelationshipCardName(p graphql.ResolveParams) (interface{}, er
 
 	// Reload data on every mutation to ensure we are updating most recent version.
 	// Particularly important for multiple mutations in a single request (which will be resolved in series).
-	acct, err := data.Load()
+	acct, err := api.data.Load()
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +74,7 @@ func resolveUpdateRelationshipCardName(p graphql.ResolveParams) (interface{}, er
 	}
 	card.Name = desiredName
 
-	err = data.Save(acct)
+	err = api.data.Save(acct)
 	if err != nil {
 		return nil, err
 	}
@@ -160,7 +82,7 @@ func resolveUpdateRelationshipCardName(p graphql.ResolveParams) (interface{}, er
 	return desiredName, nil
 }
 
-func resolveUpdateRelationshipCardMemo(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveUpdateRelationshipCardMemo(p graphql.ResolveParams) (interface{}, error) {
 	id, ok := p.Args[argCardId].(string)
 	if !ok {
 		return nil, errors.New("failed to parse cardId arg")
@@ -178,7 +100,7 @@ func resolveUpdateRelationshipCardMemo(p graphql.ResolveParams) (interface{}, er
 
 	// Reload data on every mutation to ensure we are updating most recent version.
 	// Particularly important for multiple mutations in a single request (which will be resolved in series).
-	acct, err := data.Load()
+	acct, err := api.data.Load()
 	if err != nil {
 		return nil, err
 	}
@@ -194,7 +116,7 @@ func resolveUpdateRelationshipCardMemo(p graphql.ResolveParams) (interface{}, er
 		card.Memo = &desiredMemo
 	}
 
-	err = data.Save(acct)
+	err = api.data.Save(acct)
 	if err != nil {
 		return nil, err
 	}
@@ -206,7 +128,7 @@ func resolveUpdateRelationshipCardMemo(p graphql.ResolveParams) (interface{}, er
 	}
 }
 
-func resolveUpdateRelationshipCardIsFavourite(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveUpdateRelationshipCardIsFavourite(p graphql.ResolveParams) (interface{}, error) {
 	id, ok := p.Args[argCardId].(string)
 	if !ok {
 		return nil, errors.New("failed to parse cardId arg")
@@ -218,7 +140,7 @@ func resolveUpdateRelationshipCardIsFavourite(p graphql.ResolveParams) (interfac
 
 	// Reload data on every mutation to ensure we are updating most recent version.
 	// Particularly important for multiple mutations in a single request (which will be resolved in series).
-	acct, err := data.Load()
+	acct, err := api.data.Load()
 	if err != nil {
 		return nil, err
 	}
@@ -230,7 +152,7 @@ func resolveUpdateRelationshipCardIsFavourite(p graphql.ResolveParams) (interfac
 	}
 	card.Favourite = favourite
 
-	err = data.Save(acct)
+	err = api.data.Save(acct)
 	if err != nil {
 		return nil, err
 	}
@@ -238,7 +160,7 @@ func resolveUpdateRelationshipCardIsFavourite(p graphql.ResolveParams) (interfac
 	return favourite, nil
 }
 
-func resolveReplaceRelationshipCardNotes(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveReplaceRelationshipCardNotes(p graphql.ResolveParams) (interface{}, error) {
 	id, ok := p.Args[argCardId].(string)
 	if !ok {
 		return nil, errors.New("failed to parse cardId arg")
@@ -252,7 +174,7 @@ func resolveReplaceRelationshipCardNotes(p graphql.ResolveParams) (interface{}, 
 
 	// Reload data on every mutation to ensure we are updating most recent version.
 	// Particularly important for multiple mutations in a single request (which will be resolved in series).
-	acct, err := data.Load()
+	acct, err := api.data.Load()
 	if err != nil {
 		return nil, err
 	}
@@ -264,7 +186,7 @@ func resolveReplaceRelationshipCardNotes(p graphql.ResolveParams) (interface{}, 
 	}
 	card.Notes = &notes
 
-	err = data.Save(acct)
+	err = api.data.Save(acct)
 	if err != nil {
 		return nil, err
 	}
@@ -273,7 +195,7 @@ func resolveReplaceRelationshipCardNotes(p graphql.ResolveParams) (interface{}, 
 	return string(res), err
 }
 
-func resolveDeleteRelationshipCard(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveDeleteRelationshipCard(p graphql.ResolveParams) (interface{}, error) {
 	id, ok := p.Args[argCardId].(string)
 	if !ok {
 		return nil, errors.New("failed to parse cardId arg")
@@ -281,13 +203,13 @@ func resolveDeleteRelationshipCard(p graphql.ResolveParams) (interface{}, error)
 
 	// Reload data on every mutation to ensure we are updating most recent version.
 	// Particularly important for multiple mutations in a single request (which will be resolved in series).
-	acct, err := data.Load()
+	acct, err := api.data.Load()
 	if err != nil {
 		return nil, err
 	}
 
 	acct.RemoveRelationshipCard(id)
 
-	err = data.Save(acct)
+	err = api.data.Save(acct)
 	return err == nil, err
 }

@@ -1,17 +1,30 @@
 package main
 
 import (
+	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
-	"log"
-	"io/ioutil"
 
+	"../graph"
 	"../request"
+	"../s3data"
 )
 
-type handler struct{}
+var (
+	dataBucket = os.Getenv("DATA_BUCKET")
+	dataKey    = os.Getenv("DATA_KEY")
+)
 
-func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+type graphRequestHandler interface {
+	Handle(request.Request) (request.Response, error)
+}
+
+type httpRequestHandler struct {
+	graphHandler graphRequestHandler
+}
+
+func (h *httpRequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	content, err := ioutil.ReadAll(r.Body)
 	r.Body.Close()
 	if err != nil {
@@ -28,7 +41,7 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	res, err := request.Handle(request.Request{
+	res, err := h.graphHandler.Handle(request.Request{
 		Method:  r.Method,
 		Path:    r.URL.Path,
 		Body:    string(content),
@@ -49,6 +62,10 @@ func main() {
 		port = "8080"
 	}
 
+	handler := &httpRequestHandler{
+		graphHandler: request.New(graph.New(s3data.New(dataBucket, dataKey))),
+	}
+
 	log.Println("Running on " + port)
-	log.Fatal(http.ListenAndServe(":"+port, &handler{}))
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 }

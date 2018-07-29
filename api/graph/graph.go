@@ -7,39 +7,33 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-var (
-	schema graphql.Schema
+type DataSource interface {
+	Load() (*data.Account, error)
+	Save(*data.Account) error
+}
 
-	queryType = graphql.NewObject(graphql.ObjectConfig{
-		Name: "RootQuery",
-		Fields: graphql.Fields{
-			"me": &graphql.Field{
-				Type:    accountType,
-				Resolve: resolveMe,
-			},
-		},
-	})
-)
+type API struct {
+	data   DataSource
+	schema *graphql.Schema
+}
 
-func init() {
-	schemaConfig := graphql.SchemaConfig{
-		Query:    queryType,
-		Mutation: mutationType,
+func New(data DataSource) *API {
+	api := &API{
+		data:   data,
+		schema: nil,
 	}
 
-	var err error
-	schema, err = graphql.NewSchema(schemaConfig)
+	schema, err := createSchema(api)
 	if err != nil {
 		log.Fatalf("Error building graph: %v", err)
 	}
+
+	api.schema = &schema
+
+	return api
 }
 
-func PerformQuery(query string, variables map[string]interface{}) *graphql.Result {
-	params := graphql.Params{Schema: schema, RequestString: query, VariableValues: variables}
+func (api *API) PerformQuery(query string, variables map[string]interface{}) *graphql.Result {
+	params := graphql.Params{Schema: *api.schema, RequestString: query, VariableValues: variables}
 	return graphql.Do(params)
-}
-
-func resolveMe(p graphql.ResolveParams) (interface{}, error) {
-	// Load data
-	return data.Load()
 }

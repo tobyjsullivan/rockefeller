@@ -9,60 +9,12 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
-var (
-	documentType = graphql.NewObject(graphql.ObjectConfig{
-		Name: "Document",
-		Fields: graphql.Fields{
-			"deltaJson": &graphql.Field{
-				Type:    graphql.NewNonNull(graphql.String),
-				Resolve: resolveDocumentDeltaJson,
-			},
-		},
-	})
+func (api *API) resolveMe(p graphql.ResolveParams) (interface{}, error) {
+	// Load data
+	return api.data.Load()
+}
 
-	relationshipCardType = graphql.NewObject(graphql.ObjectConfig{
-		Name: "RelationshipCard",
-		Fields: graphql.Fields{
-			"id": &graphql.Field{
-				Type:    graphql.NewNonNull(graphql.ID),
-				Resolve: resolveRelationshipCardID,
-			},
-			"name": &graphql.Field{
-				Type:    graphql.NewNonNull(graphql.String),
-				Resolve: resolveRelationshipCardName,
-			},
-			"memo": &graphql.Field{
-				Type:    graphql.String,
-				Resolve: resolveRelationshipCardMemo,
-			},
-			"isFavourite": &graphql.Field{
-				Type:    graphql.Boolean,
-				Resolve: resolveRelationshipCardIsFavourite,
-			},
-			"notes": &graphql.Field{
-				Type:    graphql.NewNonNull(documentType),
-				Resolve: resolveRelationshipCardNotes,
-			},
-		},
-	})
-
-	accountType = graphql.NewObject(graphql.ObjectConfig{
-		Name: "Account",
-		Fields: graphql.Fields{
-			"relationshipCards": &graphql.Field{
-				Type: graphql.NewNonNull(graphql.NewList(graphql.NewNonNull(relationshipCardType))),
-				Args: graphql.FieldConfigArgument{
-					argFavourite: &graphql.ArgumentConfig{
-						Type: graphql.Boolean,
-					},
-				},
-				Resolve: resolveAccountRelationshipCards,
-			},
-		},
-	})
-)
-
-func resolveAccountRelationshipCards(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveAccountRelationshipCards(p graphql.ResolveParams) (interface{}, error) {
 	// Check for favouriteFilter
 	var filterOnFavourites bool
 	var includeFavourites bool
@@ -95,7 +47,7 @@ func resolveAccountRelationshipCards(p graphql.ResolveParams) (interface{}, erro
 	return out, nil
 }
 
-func resolveRelationshipCardID(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveRelationshipCardID(p graphql.ResolveParams) (interface{}, error) {
 	if card, ok := p.Source.(*data.RelationshipCard); ok {
 		return card.ID, nil
 	}
@@ -103,7 +55,7 @@ func resolveRelationshipCardID(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("not a RelationshipCard")
 }
 
-func resolveRelationshipCardName(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveRelationshipCardName(p graphql.ResolveParams) (interface{}, error) {
 	if card, ok := p.Source.(*data.RelationshipCard); ok {
 		return card.Name, nil
 	}
@@ -111,7 +63,7 @@ func resolveRelationshipCardName(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("not a RelationshipCard")
 }
 
-func resolveRelationshipCardMemo(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveRelationshipCardMemo(p graphql.ResolveParams) (interface{}, error) {
 	if card, ok := p.Source.(*data.RelationshipCard); ok {
 		if memo := card.Memo; memo == nil {
 			return nil, nil
@@ -123,7 +75,7 @@ func resolveRelationshipCardMemo(p graphql.ResolveParams) (interface{}, error) {
 	return nil, errors.New("not a RelationshipCard")
 }
 
-func resolveRelationshipCardIsFavourite(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveRelationshipCardIsFavourite(p graphql.ResolveParams) (interface{}, error) {
 	if card, ok := p.Source.(*data.RelationshipCard); ok {
 		return card.Favourite, nil
 	}
@@ -131,7 +83,7 @@ func resolveRelationshipCardIsFavourite(p graphql.ResolveParams) (interface{}, e
 	return nil, errors.New("not a RelationshipCard")
 }
 
-func resolveRelationshipCardNotes(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveRelationshipCardNotes(p graphql.ResolveParams) (interface{}, error) {
 	if card, ok := p.Source.(*data.RelationshipCard); ok {
 		notes := card.Notes
 		if notes == nil {
@@ -144,7 +96,7 @@ func resolveRelationshipCardNotes(p graphql.ResolveParams) (interface{}, error) 
 	return nil, errors.New("not a RelationshipCard")
 }
 
-func resolveDocumentDeltaJson(p graphql.ResolveParams) (interface{}, error) {
+func (api *API) resolveDocumentDeltaJson(p graphql.ResolveParams) (interface{}, error) {
 	if doc, ok := p.Source.(*delta.Document); ok {
 		res, err := json.Marshal(doc)
 		return string(res), err

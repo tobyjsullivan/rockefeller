@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"../graph"
-	"strings"
-	"log"
 	"encoding/base64"
+	"github.com/graphql-go/graphql"
+	"log"
+	"strings"
 )
 
 const ALLOWED_ORIGIN = "*"
@@ -27,8 +27,22 @@ type Response struct {
 	BinaryData bool
 }
 
+type GraphApi interface {
+	PerformQuery(string, map[string]interface{}) *graphql.Result
+}
+
+type Handler struct {
+	graphApi GraphApi
+}
+
+func New(graphApi GraphApi) *Handler {
+	return &Handler{
+		graphApi: graphApi,
+	}
+}
+
 type queryRequest struct {
-	Query string `json:"query"`
+	Query     string                 `json:"query"`
 	Variables map[string]interface{} `json:"variables"`
 }
 
@@ -37,7 +51,7 @@ type responseBody struct {
 	Errors []string    `json:"errors"`
 }
 
-func Handle(req Request) (Response, error) {
+func (handler *Handler) Handle(req Request) (Response, error) {
 	req.Headers = normaliseHeaders(req.Headers)
 
 	log.Println("Request:", req.Method, req.Path)
@@ -58,7 +72,7 @@ func Handle(req Request) (Response, error) {
 			return generateApiResponse(http.StatusBadRequest, responseBody{Errors: []string{err.Error()}})
 		}
 
-		res, err := handleGraphQuery(&queryRequest)
+		res, err := handler.handleGraphQuery(&queryRequest)
 		if err != nil {
 			return Response{}, err
 		}
@@ -73,7 +87,7 @@ func Handle(req Request) (Response, error) {
 		return Response{
 			StatusCode: http.StatusOK,
 			Headers:    determineCorsHeaders(req),
-			Body: []byte(""),
+			Body:       []byte(""),
 			BinaryData: false,
 		}, nil
 	default:
@@ -121,8 +135,8 @@ func determineCorsHeaders(req Request) map[string]string {
 	return headers
 }
 
-func handleGraphQuery(query *queryRequest) (Response, error) {
-	r := graph.PerformQuery(query.Query, query.Variables)
+func (handler *Handler) handleGraphQuery(query *queryRequest) (Response, error) {
+	r := handler.graphApi.PerformQuery(query.Query, query.Variables)
 	if len(r.Errors) > 0 {
 		return generateApiResponse(http.StatusBadRequest, r)
 	}
