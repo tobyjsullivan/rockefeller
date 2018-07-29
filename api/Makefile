@@ -1,4 +1,4 @@
-.PHONY: init serve package docker/build-base docker/build-lambda docker/build-local format clean
+.PHONY: init serve package test docker/build-base docker/build-lambda docker/build-local docker/test format clean
 
 init: docker/build-base
 
@@ -9,6 +9,8 @@ serve: build/api
 		build/api
 
 package: build/package.zip
+
+test: docker/test
 
 build/api: docker/build-local
 
@@ -30,6 +32,10 @@ docker/build-local:
 	docker run -it --name build-local-container build-local
 	mkdir -p ./build
 	docker cp build-local-container:/var/tmp/build/build/api ./build/
+
+docker/test:
+	docker build --file Dockerfile.test -t test .
+	docker run -it test
 
 format:
 	gofmt -w **/*.go
