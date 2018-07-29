@@ -21,12 +21,14 @@ docker/build-lambda:
 	docker build --file Dockerfile.build-lambda -t build-lambda .
 	docker rm build-lambda-container || true
 	docker run -it --name build-lambda-container build-lambda
+	mkdir -p ./build
 	docker cp build-lambda-container:/var/tmp/build/build/package.zip ./build/
 
 docker/build-local:
 	docker build --file Dockerfile.build-local -t build-local .
 	docker rm build-local-container || true
 	docker run -it --name build-local-container build-local
+	mkdir -p ./build
 	docker cp build-local-container:/var/tmp/build/build/api ./build/
 
 format:
