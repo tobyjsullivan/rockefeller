@@ -39,7 +39,7 @@ prod/terraform:
 
 prod/deploy:
 	cd api && make build
-	cd infra/prod && terraform apply -auto-approve -target='module.env.module.api.aws_lambda_function.handler'
+	cd infra/prod && terraform apply -target='module.env.module.api.aws_lambda_function.handler'
 	cd web && make build/prod
 	aws s3 sync \
 		--content-encoding 'utf-8' \

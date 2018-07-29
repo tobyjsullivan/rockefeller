@@ -2,7 +2,7 @@ variable "env" {}
 
 module "api" {
   source         = "../../api/infra"
-  lambda_package = "../../api/build/package.zip"
+  lambda_package = "../../api/target/lambda/package.zip"
   env            = "${var.env}"
 }
 

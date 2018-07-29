@@ -1,0 +1,5 @@
+/.idea
+/infra
+/Dockerfile.*
+/Makefile
+/README.md

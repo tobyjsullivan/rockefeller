@@ -1,0 +1,17 @@
+FROM golang:1.10
+
+RUN apt-get update && \
+    apt-get install -y curl && \
+    apt-get clean
+
+RUN curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+
+RUN mkdir -p /go/src/localhost/rockefeller/api
+WORKDIR /go/src/localhost/rockefeller/api
+
+ADD ./src .
+RUN go get -v -d
+
+VOLUME ["/go/src/localhost/rockefeller/api"]
+
+CMD ["dep", "init", "-skip-tools", "-v"]

@@ -1,5 +1,0 @@
-FROM build-base
-
-ADD . ./
-
-ENTRYPOINT ["./bin/build-lambda.sh"]
