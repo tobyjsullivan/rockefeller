@@ -5,8 +5,8 @@ RUN apt-get update && \
     apt-get clean
 
 WORKDIR /var/tmp/build
-ADD . ./
+ADD ./src ./src/
 
-RUN go get -v -d
+RUN go get -v -d ./src
 
 VOLUME ["/var/tmp/build"]

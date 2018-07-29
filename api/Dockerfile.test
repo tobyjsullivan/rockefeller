@@ -1,5 +1,5 @@
 FROM build-base
 
-ADD . ./
+ADD ./src ./src/
 
-ENTRYPOINT ["go", "test", "./..."]
+ENTRYPOINT ["go", "test", "src/..."]

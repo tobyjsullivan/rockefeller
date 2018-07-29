@@ -1,5 +1,6 @@
 FROM build-base
 
-ADD . ./
+ADD ./bin ./bin/
+ADD ./src ./src/
 
 ENTRYPOINT ["./bin/build-lambda.sh"]
