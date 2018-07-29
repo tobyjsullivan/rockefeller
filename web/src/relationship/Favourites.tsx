@@ -22,10 +22,10 @@ class Favourites extends React.Component<{}, State> {
   }
 
   get favouriteLinks(): Iterable<any, CardSummary> {
-    const filter = store.searchQuery;
+    const filter = store.searchQuery.toLowerCase();
     let relationships = store.cardSummaries.filter(r => r.favourite);
     if (filter !== '') {
-      relationships = relationships.filter(r => new RegExp(filter, 'i').test(r.name));
+      relationships = relationships.filter(r => r.name.toLowerCase().includes(filter));
     }
     return relationships;
   }
