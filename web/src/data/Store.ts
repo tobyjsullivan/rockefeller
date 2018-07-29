@@ -1,5 +1,6 @@
 import { List, Map, Iterable } from 'immutable';
 import { decorate, observable, action, computed } from 'mobx';
+import * as Fuzzy from 'fuzzy';
 import { ID, CardSummary, RelationshipCard } from './DataTypes';
 
 class Store {
@@ -9,6 +10,15 @@ class Store {
 
   getRelationshipCard(id: ID): RelationshipCard {
     return this.relationshipCards.get(id);
+  }
+
+  get filteredCardSummaries(): Iterable<number, CardSummary> {
+      const filter = this.searchQuery;
+      let relationships: Iterable<number, CardSummary> = this.cardSummaries;
+
+      let results = Fuzzy.filter(filter, relationships.toArray(), {extract: rel => rel.name});
+      let matches = results.map(el => el.original);
+      return List(matches);
   }
 
   appendCardSummaries(summaries: Iterable<any, CardSummary>) {
@@ -26,6 +36,7 @@ class Store {
 
 decorate(Store, {
   cardSummaries: observable,
+  filteredCardSummaries: computed,
   relationshipCards: observable,
   searchQuery: observable,
   appendCardSummaries: action,
