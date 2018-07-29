@@ -24,9 +24,9 @@ staging/deploy:
 		--content-encoding 'utf-8' \
 		--content-type 'application/json; charset=utf-8' \
 		--exclude 'index.html' \
-		./web/dist/ "s3://$$(cd infra/staging && terraform output web_s3_bucket)/"
+		./web/dist/staging "s3://$$(cd infra/staging && terraform output web_s3_bucket)/"
 	aws s3 cp --content-type 'text/html' \
-		./web/dist/index.html "s3://$$(cd infra/staging && terraform output web_s3_bucket)/index.html"
+		./web/dist/staging/index.html "s3://$$(cd infra/staging && terraform output web_s3_bucket)/index.html"
 
 staging/destroy:
 	cd infra/staging && terraform destroy
@@ -45,6 +45,6 @@ prod/deploy:
 		--content-encoding 'utf-8' \
 		--content-type 'application/json; charset=utf-8' \
 		--exclude 'index.html' \
-		./web/dist/ "s3://$$(cd infra/prod && terraform output web_s3_bucket)/"
+		./web/dist/prod "s3://$$(cd infra/prod && terraform output web_s3_bucket)/"
 	aws s3 cp --content-type 'text/html' \
-		./web/dist/index.html "s3://$$(cd infra/prod && terraform output web_s3_bucket)/index.html"
+		./web/dist/prod/index.html "s3://$$(cd infra/prod && terraform output web_s3_bucket)/index.html"

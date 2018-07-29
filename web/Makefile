@@ -4,11 +4,11 @@ IDX=src/index.html
 
 build/staging: clean/staging
 	export GRAPH_API_URL="$$(cd ../infra/staging && terraform output api_invoke_url)/query" && \
-		parcel build --out-dir dist/prod $(IDX)
+		parcel build --out-dir dist/staging $(IDX)
 
 build/prod: clean/prod
 	export GRAPH_API_URL="$$(cd ../infra/prod && terraform output api_invoke_url)/query" && \
-		parcel build --out-dir dist/staging $(IDX)
+		parcel build --out-dir dist/prod $(IDX)
 
 serve: clean/local
 	export GRAPH_API_URL="$$(cd ../infra/staging && terraform output api_invoke_url)/query" && \
