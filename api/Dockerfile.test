@@ -1,5 +1,0 @@
-FROM build-base
-
-ADD ./src ./src/
-
-ENTRYPOINT ["go", "test", "src/..."]
