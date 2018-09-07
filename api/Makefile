@@ -8,7 +8,7 @@ serve: build/api
 	export AWS_REGION="$$(cd ../infra/staging && terraform output s3_data_region)" && \
 		export DATA_BUCKET="$$(cd ../infra/staging && terraform output s3_data_bucket)" && \
 		export DATA_KEY="$$(cd ../infra/staging && terraform output s3_data_key)" && \
-		build/api
+		$(OUT_DIR)/api
 
 package: build/package.zip
 
